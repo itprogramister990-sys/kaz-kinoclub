@@ -1,7 +1,6 @@
 import Navbar from '@/components/Navbar';
 import MovieCard from '@/components/MovieCard';
 import Footer from '@/components/Footer';
-import { fetchTopMovies } from '@/lib/api';
 import type { Movie } from '@/lib/types';
 import type { Metadata } from 'next';
 
@@ -17,9 +16,17 @@ export default async function TopMoviesPage() {
   let error = '';
 
   try {
-    const data = await fetchTopMovies();
-    movies = data.movies;
+    const url = `${process.env.NEXT_PUBLIC_API_URL || 'https://onrender.com'}/api/movies/top`;
+    const res = await fetch(url, { cache: 'no-store' });
+    
+    if (!res.ok) {
+      throw new Error(`Ошибка загрузки топ фильмов: ${res.status}`);
+    }
+    
+    const data = await res.json();
+    movies = data.movies || [];
   } catch (err: any) {
+    console.error('Top movies fetch error:', err);
     error = 'Не удалось загрузить топ фильмов. Пожалуйста, обновите страницу.';
   }
 

@@ -7,11 +7,17 @@ const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
 // Map textual genres from frontend to TMDB numeric IDs
 const GENRE_MAP = {
   'drama': 18,
+  'драма': 18,
   'fiction': 878, // Science Fiction
+  'фантастика': 878,
   'action': 28,
+  'боевик': 28,
   'comedy': 35,
+  'комедия': 35,
   'horror': 27,
-  'cartoon': 16
+  'ужасы': 27,
+  'cartoon': 16,
+  'мультфильмы': 16
 };
 
 // Map TMDB IDs back to textual genres for display

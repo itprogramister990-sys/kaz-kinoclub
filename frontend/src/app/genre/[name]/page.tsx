@@ -1,9 +1,17 @@
 import Navbar from '@/components/Navbar';
 import MovieCard from '@/components/MovieCard';
 import Footer from '@/components/Footer';
-import { fetchMovies } from '@/lib/api';
 import type { Movie } from '@/lib/types';
 import type { Metadata } from 'next';
+
+const slugMap: Record<string, string> = {
+  action: 'Боевик',
+  comedy: 'Комедия',
+  drama: 'Драма',
+  fiction: 'Фантастика',
+  horror: 'Ужасы',
+  cartoon: 'Мультфильмы'
+};
 
 const GENRE_TITLES: Record<string, string> = {
   'drama': 'Драмы',
@@ -32,9 +40,18 @@ export default async function GenrePage({ params }: { params: { name: string } }
   let error = '';
 
   try {
-    const data = await fetchMovies('', genreSlug);
-    movies = data.movies;
+    const russianGenre = slugMap[genreSlug] || genreSlug;
+    const url = `${process.env.NEXT_PUBLIC_API_URL || 'https://onrender.com'}/api/movies?genre=${encodeURIComponent(russianGenre)}`;
+    const res = await fetch(url, { cache: 'no-store' });
+    
+    if (!res.ok) {
+      throw new Error(`Ошибка загрузки: ${res.status}`);
+    }
+    
+    const data = await res.json();
+    movies = data.movies || [];
   } catch (err: any) {
+    console.error('Genre fetch error:', err);
     error = 'Не удалось загрузить фильмы этого жанра.';
   }
 
