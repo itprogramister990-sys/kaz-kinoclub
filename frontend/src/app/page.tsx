@@ -28,7 +28,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
     const data = await fetchMovies(query);
     movies = data.movies;
   } catch (err: any) {
-    error = err.message || 'Не удалось загрузить фильмы';
+    error = 'Сервер просыпается, обновите страницу. Это может занять около 50 секунд.';
   }
 
   const featuredMovie = movies[0];
@@ -80,10 +80,12 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                 </div>
                 <h2 className="text-xl font-semibold text-white mb-2">Ошибка загрузки</h2>
                 <p className="text-white/50 mb-6">{error}</p>
-                <p className="text-white/30 text-sm">
-                  Убедитесь, что бэкенд запущен на{' '}
-                  <code className="bg-white/10 px-2 py-0.5 rounded text-brand-red">localhost:4000</code>
-                </p>
+                <a 
+                  href="/" 
+                  className="inline-block bg-white/10 hover:bg-white/20 transition-colors px-6 py-2 rounded-lg text-white"
+                >
+                  Обновить страницу
+                </a>
               </div>
             ) : movies.length === 0 ? (
               <div className="text-center py-20">

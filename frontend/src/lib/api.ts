@@ -1,6 +1,6 @@
 import { Movie, MoviesResponse, Comment, CommentsResponse } from './types';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://onrender.com';
 
 // ─── Movies ──────────────────────────────────────────────────────────────────
 
