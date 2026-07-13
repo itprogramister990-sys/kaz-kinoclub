@@ -25,6 +25,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ru">
+      <head>
+        <script src="https://kinobox.tv/kinobox.min.js" defer></script>
+      </head>
       <body className="min-h-screen bg-[#0d0d1a] antialiased">
         {children}
       </body>
