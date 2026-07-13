@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Comments from '@/components/Comments';
 import Footer from '@/components/Footer';
+import AdsterraButton from '@/components/AdsterraButton';
 import { fetchMovie, fetchComments } from '@/lib/api';
 import type { Movie } from '@/lib/types';
 import type { Comment } from '@/lib/types';
@@ -188,6 +189,10 @@ export default async function MoviePage({ params }: MoviePageProps) {
               className="w-full h-full border-0" 
               allowFullScreen 
             />
+          </div>
+          
+          <div className="max-w-2xl mx-auto mb-8 mt-2">
+            <AdsterraButton />
           </div>
           
           <div className="flex justify-center mt-6">
