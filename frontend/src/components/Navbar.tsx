@@ -41,19 +41,23 @@ export default function Navbar() {
             <Link href="/" className="text-white/80 hover:text-white transition-colors text-sm font-medium">
               Главная
             </Link>
-            <Link href="/?genre=drama" className="text-white/80 hover:text-white transition-colors text-sm font-medium">
+            <Link href="/top" className="text-brand-red hover:text-red-400 transition-colors text-sm font-bold flex items-center gap-1">
+              Топ-100
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" /></svg>
+            </Link>
+            <Link href="/genre/drama" className="text-white/80 hover:text-white transition-colors text-sm font-medium">
               Драмы
             </Link>
-            <Link href="/?genre=fiction" className="text-white/80 hover:text-white transition-colors text-sm font-medium">
+            <Link href="/genre/fiction" className="text-white/80 hover:text-white transition-colors text-sm font-medium">
               Фантастика
             </Link>
-            <Link href="/?genre=action" className="text-white/80 hover:text-white transition-colors text-sm font-medium">
+            <Link href="/genre/action" className="text-white/80 hover:text-white transition-colors text-sm font-medium">
               Боевики
             </Link>
-            <Link href="/?genre=comedy" className="text-white/80 hover:text-white transition-colors text-sm font-medium">
+            <Link href="/genre/comedy" className="text-white/80 hover:text-white transition-colors text-sm font-medium">
               Комедии
             </Link>
-            <Link href="/?genre=horror" className="text-white/80 hover:text-white transition-colors text-sm font-medium">
+            <Link href="/genre/horror" className="text-white/80 hover:text-white transition-colors text-sm font-medium">
               Ужасы
             </Link>
           </div>

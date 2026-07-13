@@ -92,6 +92,36 @@ router.get('/', async (req, res) => {
   }
 });
 
+// GET /api/movies/top — топ лучших фильмов
+router.get('/top', async (req, res) => {
+  try {
+    if (!TMDB_API_KEY) {
+      return res.status(500).json({ error: 'TMDB_API_KEY is missing' });
+    }
+
+    // Запрашиваем 2 страницы для большего количества фильмов (20 * 2 = 40 фильмов)
+    const [page1Res, page2Res] = await Promise.all([
+      fetch(`${TMDB_BASE_URL}/movie/top_rated?api_key=${TMDB_API_KEY}&language=ru-RU&page=1`),
+      fetch(`${TMDB_BASE_URL}/movie/top_rated?api_key=${TMDB_API_KEY}&language=ru-RU&page=2`)
+    ]);
+
+    if (!page1Res.ok || !page2Res.ok) {
+      throw new Error(`TMDB responded with error`);
+    }
+
+    const data1 = await page1Res.json();
+    const data2 = await page2Res.json();
+    
+    const results = [...(data1.results || []), ...(data2.results || [])];
+    const movies = results.map(formatMovie);
+
+    res.json({ movies, total: movies.length });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Ошибка сервера' });
+  }
+});
+
 // GET /api/movies/:id — один фильм
 router.get('/:id', async (req, res) => {
   try {

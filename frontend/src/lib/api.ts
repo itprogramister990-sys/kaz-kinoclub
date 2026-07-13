@@ -4,15 +4,29 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://onrender.com';
 
 // ─── Movies ──────────────────────────────────────────────────────────────────
 
-export async function fetchMovies(query?: string): Promise<MoviesResponse> {
-  const url = query
-    ? `${API_BASE}/api/movies?q=${encodeURIComponent(query)}`
-    : `${API_BASE}/api/movies`;
+export async function fetchMovies(query?: string, genre?: string): Promise<MoviesResponse> {
+  let url = `${API_BASE}/api/movies`;
+  if (query) {
+    url += `?q=${encodeURIComponent(query)}`;
+  } else if (genre) {
+    url += `?genre=${encodeURIComponent(genre)}`;
+  }
 
   const res = await fetch(url, { next: { revalidate: 60 } });
 
   if (!res.ok) {
     throw new Error(`Ошибка загрузки фильмов: ${res.status}`);
+  }
+
+  return res.json();
+}
+
+export async function fetchTopMovies(): Promise<MoviesResponse> {
+  const url = `${API_BASE}/api/movies/top`;
+  const res = await fetch(url, { next: { revalidate: 60 } });
+
+  if (!res.ok) {
+    throw new Error(`Ошибка загрузки топ фильмов: ${res.status}`);
   }
 
   return res.json();
