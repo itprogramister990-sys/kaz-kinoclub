@@ -190,7 +190,7 @@ export default async function MoviePage({ params }: MoviePageProps) {
 
           <div className="w-full aspect-video rounded-xl overflow-hidden shadow-2xl bg-gray-900 border border-gray-800">
             <iframe 
-              src={`https://api.alloha.tv/?tmdb=${movie.id}`} 
+              src={movie.imdb_id ? `https://strall.club/?imdb=${movie.imdb_id}` : `https://strall.club/?tmdb=${movie.id}`} 
               className="w-full h-full border-0" 
               allowFullScreen 
             />

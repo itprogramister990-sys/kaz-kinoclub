@@ -11,6 +11,7 @@ export interface Movie {
   rating: number;
   release_date?: string | null;
   youtube_key?: string;
+  imdb_id?: string;
 }
 
 export interface Comment {
