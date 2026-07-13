@@ -1,30 +1,17 @@
 'use client';
+import { Suspense } from 'react';
 
 import Link from 'next/link';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import SearchBar from './SearchBar';
 
 export default function Navbar() {
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [query, setQuery] = useState('');
-  const router = useRouter();
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (query.trim()) {
-      router.push(`/?q=${encodeURIComponent(query.trim())}`);
-      setSearchOpen(false);
-      setQuery('');
-    }
-  };
-
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
       <div className="absolute inset-0 bg-gradient-to-b from-black/90 via-black/70 to-transparent backdrop-blur-sm" />
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 md:h-20">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+        <div className="flex flex-wrap items-center justify-between gap-y-4">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group">
+          <Link href="/" className="flex items-center gap-2 group shrink-0">
             <div className="w-8 h-8 md:w-10 md:h-10 bg-brand-gradient rounded-lg flex items-center justify-center shadow-glow-red group-hover:scale-110 transition-transform">
               <span className="text-white font-display font-black text-lg md:text-xl">К</span>
             </div>
@@ -37,7 +24,7 @@ export default function Navbar() {
           </Link>
 
           {/* Nav links */}
-          <div className="hidden md:flex items-center gap-6">
+          <div className="hidden lg:flex items-center gap-6 flex-wrap justify-center">
             <Link href="/" className="text-white/80 hover:text-white transition-colors text-sm font-medium">
               Главная
             </Link>
@@ -65,60 +52,14 @@ export default function Navbar() {
             </Link>
           </div>
 
-          {/* Search */}
-          <div className="flex items-center gap-3">
-            {searchOpen ? (
-              <form onSubmit={handleSearch} className="flex items-center gap-2 animate-fade-in">
-                <input
-                  autoFocus
-                  type="text"
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Поиск фильмов..."
-                  className="input-field w-48 md:w-64 py-2 text-sm"
-                />
-                <button
-                  type="submit"
-                  className="p-2 bg-brand-red rounded-lg hover:bg-red-700 transition-colors"
-                >
-                  <SearchIcon />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setSearchOpen(false)}
-                  className="p-2 text-white/60 hover:text-white transition-colors"
-                >
-                  <XIcon />
-                </button>
-              </form>
-            ) : (
-              <button
-                onClick={() => setSearchOpen(true)}
-                className="p-2 text-white/70 hover:text-white transition-colors hover:bg-white/10 rounded-lg"
-                aria-label="Поиск"
-              >
-                <SearchIcon />
-              </button>
-            )}
+          {/* SearchBar */}
+          <div className="w-full md:w-auto flex-1 md:flex-none md:min-w-[300px] shrink-0">
+            <Suspense fallback={<div className="h-10 animate-pulse bg-white/5 rounded-lg w-full"></div>}>
+              <SearchBar />
+            </Suspense>
           </div>
         </div>
       </div>
     </nav>
-  );
-}
-
-function SearchIcon() {
-  return (
-    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-    </svg>
-  );
-}
-
-function XIcon() {
-  return (
-    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-    </svg>
   );
 }

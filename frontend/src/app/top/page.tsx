@@ -56,7 +56,7 @@ export default async function TopMoviesPage() {
               </a>
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6">
               {movies.map((movie, index) => (
                 <div key={movie.id} className="relative group">
                   <div className="absolute -top-3 -left-3 w-8 h-8 md:w-10 md:h-10 bg-brand-red text-white font-bold rounded-full flex items-center justify-center z-20 shadow-lg border-2 border-[#0a0a0a]">
