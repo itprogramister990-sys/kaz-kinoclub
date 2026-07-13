@@ -85,10 +85,7 @@ export default async function Home() {
                 <h2 className="text-xl font-semibold text-white mb-2">Нет данных</h2>
               </div>
             ) : (
-              <>
-                <h2 className="section-title">Все фильмы</h2>
-                <MainMovieGrid initialMovies={movies} />
-              </>
+              <MainMovieGrid initialMovies={movies} />
             )}
           </div>
         </section>
