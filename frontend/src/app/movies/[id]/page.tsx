@@ -203,7 +203,6 @@ export default async function MoviePage({ params }: MoviePageProps) {
               src={`https://kinobox.tv/api/players?tmdb=${movie.id}`} 
               className="w-full h-full border-0" 
               allowFullScreen 
-              sandbox="allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-presentation allow-same-origin allow-scripts"
             />
           </div>
         </section>
