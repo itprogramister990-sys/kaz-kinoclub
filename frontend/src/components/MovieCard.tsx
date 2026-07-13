@@ -52,7 +52,7 @@ export default function MovieCard({ movie }: MovieCardProps) {
           <h3 className="font-semibold text-white text-sm md:text-base leading-tight line-clamp-2 group-hover:text-brand-red transition-colors mb-1">
             {movie.title}
           </h3>
-          <p className="text-white/50 text-xs line-clamp-1">
+          <p className="text-white/50 text-xs line-clamp-1" title={movie.genre}>
             {movie.genre}
           </p>
         </div>

@@ -12,7 +12,7 @@ export async function fetchMovies(query?: string, genre?: string): Promise<Movie
     url += `?genre=${encodeURIComponent(genre)}`;
   }
 
-  const res = await fetch(url, { next: { revalidate: 60 } });
+  const res = await fetch(url, { cache: 'no-store' });
 
   if (!res.ok) {
     throw new Error(`Ошибка загрузки фильмов: ${res.status}`);
@@ -23,7 +23,7 @@ export async function fetchMovies(query?: string, genre?: string): Promise<Movie
 
 export async function fetchTopMovies(): Promise<MoviesResponse> {
   const url = `${API_BASE}/api/movies/top`;
-  const res = await fetch(url, { next: { revalidate: 60 } });
+  const res = await fetch(url, { cache: 'no-store' });
 
   if (!res.ok) {
     throw new Error(`Ошибка загрузки топ фильмов: ${res.status}`);
@@ -34,7 +34,7 @@ export async function fetchTopMovies(): Promise<MoviesResponse> {
 
 export async function fetchMovie(id: number | string): Promise<Movie> {
   const res = await fetch(`${API_BASE}/api/movies/${id}`, {
-    next: { revalidate: 60 },
+    cache: 'no-store',
   });
 
   if (!res.ok) {
