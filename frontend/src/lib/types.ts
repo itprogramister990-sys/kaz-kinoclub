@@ -10,6 +10,7 @@ export interface Movie {
   year: number;
   rating: number;
   release_date?: string | null;
+  youtube_key?: string;
 }
 
 export interface Comment {

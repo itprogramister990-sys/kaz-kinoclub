@@ -235,6 +235,31 @@ router.get('/:id', async (req, res) => {
     const data = await response.json();
     const movie = formatMovie(data);
 
+    // Подтягиваем официальный трейлер с YouTube
+    try {
+      const videosResRu = await fetch(`${TMDB_BASE_URL}/movie/${id}/videos?api_key=${TMDB_API_KEY}&language=ru-RU`);
+      let trailer = null;
+      if (videosResRu.ok) {
+        const videosDataRu = await videosResRu.json();
+        trailer = (videosDataRu.results || []).find(v => v.type === 'Trailer' && v.site === 'YouTube');
+      }
+
+      // Фолбэк на оригинальный трейлер (без языка), если на русском нет
+      if (!trailer) {
+        const videosResEn = await fetch(`${TMDB_BASE_URL}/movie/${id}/videos?api_key=${TMDB_API_KEY}`);
+        if (videosResEn.ok) {
+          const videosDataEn = await videosResEn.json();
+          trailer = (videosDataEn.results || []).find(v => v.type === 'Trailer' && v.site === 'YouTube');
+        }
+      }
+
+      if (trailer && trailer.key) {
+        movie.youtube_key = trailer.key;
+      }
+    } catch (e) {
+      console.error('Ошибка при получении трейлера:', e);
+    }
+
     res.json(movie);
   } catch (err) {
     console.error(err);

@@ -189,8 +189,24 @@ export default async function MoviePage({ params }: MoviePageProps) {
           </div>
         </section>
 
+        {/* ─── Trailer ────────────────────────────────────────────────── */}
+        {movie.youtube_key && (
+          <section className="max-w-3xl mx-auto px-4 sm:px-6 pb-12">
+            <h2 className="text-2xl font-bold text-white mb-6">Официальный трейлер</h2>
+            <div className="w-full aspect-video rounded-xl overflow-hidden shadow-2xl bg-gray-900 border border-white/10">
+              <iframe 
+                src={`https://www.youtube.com/embed/${movie.youtube_key}?rel=0`} 
+                className="w-full h-full border-0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen 
+                title={`Трейлер: ${movie.title}`}
+              />
+            </div>
+          </section>
+        )}
+
         {/* ─── Comments ───────────────────────────────────────────────── */}
-        <section className="max-w-3xl mx-auto px-4 sm:px-6 pb-16">
+        <section id="comments-section" className="max-w-3xl mx-auto px-4 sm:px-6 pb-16">
           <Comments movieId={movie.id} initialComments={comments} />
         </section>
       </main>
