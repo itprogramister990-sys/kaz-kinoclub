@@ -19,7 +19,7 @@ interface HomePageProps {
   searchParams: { q?: string };
 }
 
-export default async function HomePage({ searchParams }: HomePageProps) {
+export default async function Home({ searchParams }: HomePageProps) {
   const query = searchParams.q || '';
 
   let movies: Movie[] = [];
