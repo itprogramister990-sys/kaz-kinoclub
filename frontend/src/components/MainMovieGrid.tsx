@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import MovieCard from '@/components/MovieCard';
 import type { Movie } from '@/lib/types';
 
@@ -16,6 +16,12 @@ export default function MainMovieGrid({ initialMovies, query = '', genres = '', 
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(initialMovies.length === 20);
+
+  useEffect(() => {
+    setMovies(initialMovies);
+    setPage(1);
+    setHasMore(initialMovies.length === 20);
+  }, [initialMovies, query, genres, years]);
 
   const loadMore = async () => {
     if (isLoading || !hasMore) return;
