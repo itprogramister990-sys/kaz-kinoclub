@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: { params: { name: string } })
   };
 }
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 43200;
 
 export default async function GenrePage({ params }: { params: { name: string } }) {
   const genreSlug = params.name;

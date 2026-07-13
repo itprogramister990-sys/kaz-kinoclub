@@ -14,7 +14,7 @@ export async function fetchMovies(query?: string, genre?: string, page?: number)
   const queryString = params.toString();
   if (queryString) url += `?${queryString}`;
 
-  const res = await fetch(url, { cache: 'no-store' });
+  const res = await fetch(url, { next: { revalidate: 43200 } });
 
   if (!res.ok) {
     throw new Error(`Ошибка загрузки фильмов: ${res.status}`);
@@ -25,7 +25,7 @@ export async function fetchMovies(query?: string, genre?: string, page?: number)
 
 export async function fetchTopMovies(): Promise<MoviesResponse> {
   const url = `${API_BASE}/api/movies/top`;
-  const res = await fetch(url, { cache: 'no-store' });
+  const res = await fetch(url, { next: { revalidate: 43200 } });
 
   if (!res.ok) {
     throw new Error(`Ошибка загрузки топ фильмов: ${res.status}`);
@@ -36,7 +36,7 @@ export async function fetchTopMovies(): Promise<MoviesResponse> {
 
 export async function fetchMovie(id: number | string): Promise<Movie> {
   const res = await fetch(`${API_BASE}/api/movies/${id}`, {
-    cache: 'no-store',
+    next: { revalidate: 43200 },
   });
 
   if (!res.ok) {

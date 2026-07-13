@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   description: 'Лучшие фильмы по версии сообщества и TMDB.',
 };
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 43200;
 
 export default async function TopMoviesPage() {
   let movies: Movie[] = [];
@@ -17,7 +17,7 @@ export default async function TopMoviesPage() {
 
   try {
     const url = `${process.env.NEXT_PUBLIC_API_URL || 'https://onrender.com'}/api/movies/top`;
-    const res = await fetch(url, { cache: 'no-store' });
+    const res = await fetch(url, { next: { revalidate: 43200 } });
     
     if (!res.ok) {
       throw new Error(`Ошибка загрузки топ фильмов: ${res.status}`);
