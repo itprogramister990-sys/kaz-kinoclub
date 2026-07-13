@@ -79,8 +79,9 @@ function formatMovie(tmdbMovie) {
 // GET /api/movies — все фильмы (с поиском и фильтром)
 router.get('/', async (req, res) => {
   try {
-    const { q, genres, year } = req.query;
+    const { q, genres } = req.query;
     const inputGenres = genres || req.query.genre;
+    const inputYears = req.query.years || req.query.year;
     const page = req.query.page || 1;
 
     if (!TMDB_API_KEY) {
@@ -90,6 +91,7 @@ router.get('/', async (req, res) => {
 
     let url = '';
     let targetGenreIds = [];
+    let targetYears = [];
     
     if (inputGenres) {
       const parts = inputGenres.split(',');
@@ -101,11 +103,17 @@ router.get('/', async (req, res) => {
       }
       targetGenreIds = [...new Set(targetGenreIds)];
     }
+
+    if (inputYears) {
+      targetYears = inputYears.split(',').map(y => y.trim()).filter(Boolean);
+    }
     
     if (q && q.trim()) {
       url = `${TMDB_BASE_URL}/search/movie?api_key=${TMDB_API_KEY}&language=ru-RU&query=${encodeURIComponent(q.trim())}&page=${page}`;
-      if (year) {
-        url += `&primary_release_year=${year}`;
+      if (targetYears.length === 1) {
+        url += `&primary_release_year=${targetYears[0]}`;
+      } else if (targetYears.length > 1) {
+        // search/movie in TMDB doesn't support date range, so we'll just filter manually later
       }
     } else {
       url = `${TMDB_BASE_URL}/discover/movie?api_key=${TMDB_API_KEY}&language=ru-RU&sort_by=popularity.desc&page=${page}`;
@@ -113,8 +121,14 @@ router.get('/', async (req, res) => {
       if (targetGenreIds.length > 0) {
         url += `&with_genres=${targetGenreIds.join(',')}`;
       }
-      if (year) {
-        url += `&primary_release_year=${year}`;
+      
+      if (targetYears.length === 1) {
+        url += `&primary_release_year=${targetYears[0]}`;
+      } else if (targetYears.length > 1) {
+        const yearsNum = targetYears.map(Number);
+        const minYear = Math.min(...yearsNum);
+        const maxYear = Math.max(...yearsNum);
+        url += `&primary_release_date.gte=${minYear}-01-01&primary_release_date.lte=${maxYear}-12-31`;
       }
     }
 
@@ -126,12 +140,20 @@ router.get('/', async (req, res) => {
     const data = await response.json();
     let results = data.results || [];
     
-    // Если был текстовый поиск и одновременно жанр — фильтруем вручную (т.к. TMDB search не поддерживает with_genres)
+    // Ручная фильтрация для жанров при поиске
     if (q && q.trim() && targetGenreIds.length > 0) {
       results = results.filter(m => {
         const ids = m.genre_ids || [];
-        // Проверяем, что все указанные ID присутствуют у фильма (логика AND, как в TMDB with_genres)
         return targetGenreIds.every(id => ids.includes(id));
+      });
+    }
+
+    // Ручная фильтрация годов (если выбрано несколько, так как TMDB мог вернуть фильмы между min и max годами, которые не выбраны)
+    if (targetYears.length > 1) {
+      results = results.filter(m => {
+        if (!m.release_date) return false;
+        const mYear = m.release_date.substring(0, 4);
+        return targetYears.includes(mYear);
       });
     }
     

@@ -23,21 +23,29 @@ export default function SearchBar() {
   
   const initialQuery = searchParams.get('q') || '';
   const initialGenres = searchParams.get('genres') || searchParams.get('genre') || '';
-  const initialYear = searchParams.get('year') || '';
+  const initialYears = searchParams.get('years') || searchParams.get('year') || '';
 
   const [query, setQuery] = useState(initialQuery);
   const [selectedGenres, setSelectedGenres] = useState<string[]>(
     initialGenres ? initialGenres.split(',') : []
   );
-  const [year, setYear] = useState(initialYear);
+  const [selectedYears, setSelectedYears] = useState<string[]>(
+    initialYears ? initialYears.split(',') : []
+  );
   const [showFilters, setShowFilters] = useState(false);
   const [isPending, startTransition] = useTransition();
 
-  const years = Array.from({ length: 27 }, (_, i) => 2026 - i);
+  const years = ['2026', '2025', '2024', '2023', '2022', '2021', '2020'];
 
   const toggleGenre = (slug: string) => {
     setSelectedGenres(prev => 
       prev.includes(slug) ? prev.filter(g => g !== slug) : [...prev, slug]
+    );
+  };
+
+  const toggleYear = (y: string) => {
+    setSelectedYears(prev => 
+      prev.includes(y) ? prev.filter(item => item !== y) : [...prev, y]
     );
   };
 
@@ -47,10 +55,10 @@ export default function SearchBar() {
       const params = new URLSearchParams();
       if (query.trim()) params.append('q', query.trim());
       if (selectedGenres.length > 0) params.append('genres', selectedGenres.join(','));
-      if (year && year !== 'Все') params.append('year', year);
+      if (selectedYears.length > 0) params.append('years', selectedYears.join(','));
 
       const qs = params.toString();
-      router.push(qs ? `/?${qs}` : '/');
+      router.push(qs ? `/search-results?${qs}` : '/search-results');
       setShowFilters(false);
     });
   };
@@ -58,8 +66,8 @@ export default function SearchBar() {
   const handleClear = () => {
     setQuery('');
     setSelectedGenres([]);
-    setYear('');
-    router.push('/');
+    setSelectedYears([]);
+    router.push('/search-results');
   };
 
   return (
@@ -89,7 +97,7 @@ export default function SearchBar() {
           {/* Controls right side */}
           <div className="absolute right-2 flex items-center gap-2">
             {/* Clear button */}
-            {(query || selectedGenres.length > 0 || year) && (
+            {(query || selectedGenres.length > 0 || selectedYears.length > 0) && (
               <button
                 type="button"
                 onClick={handleClear}
@@ -177,16 +185,32 @@ export default function SearchBar() {
             {/* Год (1 колонка) */}
             <div>
               <label className="block text-sm font-medium text-white/70 mb-3">Год выпуска</label>
-              <select
-                value={year}
-                onChange={(e) => setYear(e.target.value)}
-                className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand-red/50 appearance-none cursor-pointer"
-              >
-                <option value="">За всё время</option>
+              <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
                 {years.map(y => (
-                  <option key={y} value={y}>{y}</option>
+                  <label key={y} className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 cursor-pointer transition-colors border border-transparent hover:border-white/10">
+                    <div className="relative flex items-center justify-center">
+                      <input
+                        type="checkbox"
+                        checked={selectedYears.includes(y)}
+                        onChange={() => toggleYear(y)}
+                        className="peer appearance-none w-5 h-5 border-2 border-white/30 rounded focus:outline-none checked:bg-brand-red checked:border-brand-red transition-all cursor-pointer"
+                      />
+                      <svg
+                        className="absolute w-3.5 h-3.5 text-white opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth="3"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <span className="text-white/80 text-sm select-none peer-checked:text-white peer-checked:font-medium transition-all">
+                      {y}
+                    </span>
+                  </label>
                 ))}
-              </select>
+              </div>
             </div>
           </div>
 

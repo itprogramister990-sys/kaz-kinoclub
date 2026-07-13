@@ -1,62 +1,63 @@
 import { Suspense } from 'react';
 import Navbar from '@/components/Navbar';
-import HeroBanner from '@/components/HeroBanner';
-import MainMovieGrid from '@/components/MainMovieGrid';
-import SearchBar from '@/components/SearchBar';
 import Footer from '@/components/Footer';
+import SearchBar from '@/components/SearchBar';
+import MainMovieGrid from '@/components/MainMovieGrid';
 import { fetchMovies } from '@/lib/api';
 import type { Movie } from '@/lib/types';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'КиноКлуб Казахстан — Лучшие фильмы для казахстанского сообщества',
-  description: 'Откройте для себя лучшие фильмы, читайте отзывы и смотрите легально. КиноКлуб Казахстан — ваше кино сообщество.',
+  title: 'Результаты поиска — КиноКлуб Казахстан',
+  description: 'Результаты поиска по фильмам.',
 };
 
 export const revalidate = 43200;
 
-export default async function Home() {
+interface SearchResultsPageProps {
+  searchParams: { q?: string; years?: string; genres?: string };
+}
+
+export default async function SearchResultsPage({ searchParams }: SearchResultsPageProps) {
+  const query = searchParams.q || '';
+  const years = searchParams.years || '';
+  const genres = searchParams.genres || '';
+
   let movies: Movie[] = [];
   let error = '';
 
   try {
-    const data = await fetchMovies();
+    const data = await fetchMovies(query, genres, 1, years);
     movies = data.movies;
   } catch (err: any) {
-    error = 'Сервер просыпается, обновите страницу. Это может занять около 50 секунд.';
+    error = 'Ошибка загрузки результатов поиска.';
   }
-
-  const featuredMovie = movies[0];
 
   return (
     <>
       <Navbar />
 
-      <main>
-        {/* Hero Banner — only on initial load */}
-        {featuredMovie && (
-          <HeroBanner movie={featuredMovie} />
-        )}
-
-        {/* Search section */}
-        <section className="relative z-10 py-10 px-4" aria-label="Поиск фильмов">
-          <div className="max-w-7xl mx-auto">
-            {/* Search header */}
+      <main className="pt-24 pb-12 px-4 min-h-screen">
+        <div className="max-w-7xl mx-auto">
+          {/* Search section */}
+          <section className="mb-8" aria-label="Поиск фильмов">
             <div className="text-center mb-8">
-              <h2 className="font-display font-bold text-2xl md:text-3xl text-white mb-2">
-                Найдите свой следующий любимый фильм
-              </h2>
-              <p className="text-white/50">Поиск по названию, жанру или году</p>
+              <h1 className="font-display font-bold text-2xl md:text-3xl text-white mb-2">
+                Результаты поиска
+              </h1>
+              {query && (
+                <p className="text-white/70 text-lg">
+                  по запросу: <span className="text-gradient-red font-semibold">«{query}»</span>
+                </p>
+              )}
             </div>
             <Suspense fallback={<div className="h-16 bg-white/5 rounded-2xl animate-pulse w-full max-w-2xl mx-auto"></div>}>
               <SearchBar />
             </Suspense>
-          </div>
-        </section>
+          </section>
 
-        {/* Movies grid */}
-        <section className="py-8 px-4" aria-label="Коллекция фильмов">
-          <div className="max-w-7xl mx-auto">
+          {/* Movies grid */}
+          <section aria-label="Найденные фильмы">
             {error ? (
               <div className="text-center py-20">
                 <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -68,7 +69,7 @@ export default async function Home() {
                 <h2 className="text-xl font-semibold text-white mb-2">Ошибка загрузки</h2>
                 <p className="text-white/50 mb-6">{error}</p>
                 <a 
-                  href="/" 
+                  href="/search-results" 
                   className="inline-block bg-white/10 hover:bg-white/20 transition-colors px-6 py-2 rounded-lg text-white"
                 >
                   Обновить страницу
@@ -82,16 +83,14 @@ export default async function Home() {
                       d="M15 10l4.553-2.069A1 1 0 0121 8.87v6.26a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                   </svg>
                 </div>
-                <h2 className="text-xl font-semibold text-white mb-2">Нет данных</h2>
+                <h2 className="text-xl font-semibold text-white mb-2">Ничего не найдено</h2>
+                <p className="text-white/50">Попробуйте изменить параметры фильтров</p>
               </div>
             ) : (
-              <>
-                <h2 className="section-title">Все фильмы</h2>
-                <MainMovieGrid initialMovies={movies} />
-              </>
+              <MainMovieGrid initialMovies={movies} query={query} genres={genres} years={years} />
             )}
-          </div>
-        </section>
+          </section>
+        </div>
       </main>
 
       <Footer />

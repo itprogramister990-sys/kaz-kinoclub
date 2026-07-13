@@ -7,11 +7,11 @@ import type { Movie } from '@/lib/types';
 interface MainMovieGridProps {
   initialMovies: Movie[];
   query?: string;
-  genre?: string;
-  year?: string;
+  genres?: string;
+  years?: string;
 }
 
-export default function MainMovieGrid({ initialMovies, query = '', genre = '', year = '' }: MainMovieGridProps) {
+export default function MainMovieGrid({ initialMovies, query = '', genres = '', years = '' }: MainMovieGridProps) {
   const [movies, setMovies] = useState<Movie[]>(initialMovies);
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
@@ -26,8 +26,8 @@ export default function MainMovieGrid({ initialMovies, query = '', genre = '', y
       const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://onrender.com';
       let url = `${API_BASE}/api/movies?page=${nextPage}`;
       if (query) url += `&q=${encodeURIComponent(query)}`;
-      if (genre) url += `&genre=${encodeURIComponent(genre)}`;
-      if (year) url += `&year=${encodeURIComponent(year)}`;
+      if (genres) url += `&genres=${encodeURIComponent(genres)}`;
+      if (years) url += `&years=${encodeURIComponent(years)}`;
       
       const res = await fetch(url);
       const data = await res.json();
