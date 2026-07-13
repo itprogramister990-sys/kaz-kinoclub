@@ -22,7 +22,9 @@ export default function GenreMovieGrid({ initialMovies, genreSlug }: GenreMovieG
     
     try {
       const nextPage = page + 1;
-      const data = await fetchMovies('', genreSlug, nextPage);
+      const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://onrender.com';
+      const res = await fetch(`${API_BASE}/api/movies?genre=${encodeURIComponent(genreSlug)}&page=${nextPage}`);
+      const data = await res.json();
       
       if (data.movies && data.movies.length > 0) {
         setMovies((prev) => [...prev, ...data.movies]);

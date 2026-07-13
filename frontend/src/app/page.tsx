@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import Navbar from '@/components/Navbar';
 import HeroBanner from '@/components/HeroBanner';
-import MovieCard from '@/components/MovieCard';
+import MainMovieGrid from '@/components/MainMovieGrid';
 import SearchBar from '@/components/SearchBar';
 import Footer from '@/components/Footer';
 import { fetchMovies } from '@/lib/api';
@@ -101,20 +101,7 @@ export default async function Home({ searchParams }: HomePageProps) {
               </div>
             ) : (
               <>
-                {/* Section title */}
-                <h2 className="section-title">
-                  {isSearching ? `Найдено ${movies.length} фильмов` : 'Все фильмы'}
-                </h2>
-
-                {/* Grid */}
-                <div
-                  id="movies-grid"
-                  className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6"
-                >
-                  {movies.map((movie) => (
-                    <MovieCard key={movie.id} movie={movie} />
-                  ))}
-                </div>
+                <MainMovieGrid initialMovies={movies} query={query} />
               </>
             )}
           </div>
