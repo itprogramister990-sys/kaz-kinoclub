@@ -73,53 +73,57 @@ export default function SearchBar() {
   return (
     <div className="w-full max-w-2xl mx-auto relative z-50">
       <form onSubmit={handleSubmit} role="search" aria-label="Поиск фильмов">
-        <div className="relative flex items-center">
-          {/* Search icon */}
-          <div className="absolute left-4 text-white/40 pointer-events-none">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-          </div>
+        <div className="relative flex flex-col md:flex-row md:items-center gap-3 md:gap-0">
+          
+          {/* Input wrapper */}
+          <div className="relative w-full">
+            <div className="absolute left-4 top-0 bottom-0 flex items-center text-white/40 pointer-events-none">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </div>
 
-          <input
-            id="search-input"
-            type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Поиск по названию..."
-            className="w-full bg-white/10 border border-white/20 rounded-2xl pl-12 pr-[14rem] py-4
-                       text-white placeholder-white/40 focus:outline-none focus:border-brand-red/60
-                       focus:bg-white/15 transition-all duration-200 text-base backdrop-blur-sm"
-            aria-label="Строка поиска"
-          />
+            <input
+              id="search-input"
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Поиск по названию..."
+              className="w-full bg-white/10 border border-white/20 rounded-2xl pl-12 pr-12 md:pr-[15rem] py-4
+                         text-white placeholder-white/40 focus:outline-none focus:border-brand-red/60
+                         focus:bg-white/15 transition-all duration-200 text-base backdrop-blur-sm"
+              aria-label="Строка поиска"
+            />
 
-          {/* Controls right side */}
-          <div className="absolute right-2 flex items-center gap-2">
             {/* Clear button */}
             {(query || selectedGenres.length > 0 || selectedYears.length > 0) && (
               <button
                 type="button"
                 onClick={handleClear}
-                className="text-white/40 hover:text-white/80 transition-colors p-2"
+                className="absolute right-4 top-0 bottom-0 flex items-center text-white/40 hover:text-white/80 transition-colors md:right-[15rem]"
                 aria-label="Очистить поиск"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
             )}
+          </div>
 
+          {/* Controls wrapper */}
+          <div className="flex items-center gap-2 w-full md:w-auto md:absolute md:right-2">
             {/* Filter Toggle Button */}
             <button
               type="button"
               onClick={() => setShowFilters(!showFilters)}
-              className={`p-2.5 rounded-lg transition-colors ${showFilters ? 'bg-white/20 text-white' : 'text-white/60 hover:text-white hover:bg-white/10'}`}
+              className={`flex-1 md:flex-none flex justify-center items-center gap-2 py-2.5 px-4 rounded-xl transition-colors border md:border-transparent ${showFilters ? 'bg-white/20 text-white border-white/20' : 'bg-white/5 border-white/10 text-white/60 hover:text-white hover:bg-white/10'}`}
               aria-label="Фильтры"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
+              <span className="md:hidden font-medium">Фильтры</span>
             </button>
 
             {/* Submit button */}
@@ -127,17 +131,15 @@ export default function SearchBar() {
               type="submit"
               disabled={isPending}
               id="search-submit-btn"
-              className="bg-brand-gradient text-white font-semibold px-5 py-2.5
-                         rounded-xl hover:shadow-glow-red transition-all duration-200 hover:scale-105
-                         active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed text-sm"
+              className="flex-1 md:flex-none flex justify-center items-center gap-2 bg-brand-gradient text-white font-semibold px-5 py-2.5 md:py-2.5
+                         rounded-xl border border-transparent hover:shadow-glow-red transition-all duration-200 md:hover:scale-105
+                         active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed text-base md:text-sm"
             >
               {isPending ? (
-                <span className="flex items-center gap-1">
-                  <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                  </svg>
-                </span>
+                <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                </svg>
               ) : (
                 'Найти'
               )}
@@ -148,7 +150,7 @@ export default function SearchBar() {
 
       {/* Expandable Filters Panel */}
       {showFilters && (
-        <div className="absolute top-full left-0 right-0 mt-3 p-5 bg-[#151525]/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl animate-slide-up text-left">
+        <div className="absolute top-full left-0 right-0 mt-3 p-5 bg-[#151525]/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl animate-slide-up text-left z-50">
           <div className="flex flex-col gap-6">
             
             {/* Жанры */}
@@ -219,7 +221,7 @@ export default function SearchBar() {
                 type="button"
                 onClick={handleSubmit}
                 disabled={isPending}
-                className="bg-brand-red hover:bg-red-600 text-white font-medium px-8 py-2.5 rounded-xl transition-all shadow-glow-red hover:scale-105 active:scale-95"
+                className="bg-brand-red hover:bg-red-600 text-white font-medium px-8 py-2.5 rounded-xl transition-all shadow-glow-red hover:scale-105 active:scale-95 w-full md:w-auto"
              >
                Применить фильтры
              </button>
