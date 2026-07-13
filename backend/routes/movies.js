@@ -60,7 +60,8 @@ function formatMovie(tmdbMovie) {
     partner_link: `https://www.kinopoisk.ru/index.php?kp_query=${encodeURIComponent(tmdbMovie.title || tmdbMovie.original_title)}`,
     genre: genreText,
     year: year,
-    rating: tmdbMovie.vote_average || 0
+    rating: tmdbMovie.vote_average || 0,
+    release_date: tmdbMovie.release_date || null
   };
 }
 

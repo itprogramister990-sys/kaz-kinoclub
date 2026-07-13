@@ -7,6 +7,15 @@ interface MovieCardProps {
 }
 
 export default function MovieCard({ movie }: MovieCardProps) {
+  const isUnreleased = movie.release_date && new Date(movie.release_date) > new Date();
+  const formattedDate = movie.release_date 
+    ? new Date(movie.release_date).toLocaleDateString('ru-RU', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+      })
+    : '';
+
   return (
     <Link href={`/movies/${movie.id}`} className="block group">
       <article className="card h-full cursor-pointer" id={`movie-card-${movie.id}`}>
@@ -55,6 +64,11 @@ export default function MovieCard({ movie }: MovieCardProps) {
           <p className="text-white/50 text-xs line-clamp-1" title={movie.genre}>
             {movie.genre}
           </p>
+          {isUnreleased && (
+            <p className="mt-2 text-[10px] sm:text-xs text-brand-red font-medium bg-brand-red/10 border border-brand-red/20 rounded-md px-2 py-1 inline-block">
+              Фильм ещё не вышел. Планируемая дата: {formattedDate}
+            </p>
+          )}
         </div>
       </article>
     </Link>

@@ -9,6 +9,7 @@ export interface Movie {
   genre: string;
   year: number;
   rating: number;
+  release_date?: string | null;
 }
 
 export interface Comment {
