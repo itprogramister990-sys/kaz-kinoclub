@@ -12,6 +12,9 @@ export const metadata: Metadata = {
     locale: 'ru_RU',
     type: 'website',
   },
+  verification: {
+    google: 'WuCUsJM09tzTtDSvo9x-Lz0jJUH-zlsTd-3qYAE9J7I',
+  },
 };
 
 export default function RootLayout({
