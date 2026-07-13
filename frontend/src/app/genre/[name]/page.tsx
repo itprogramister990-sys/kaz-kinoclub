@@ -1,6 +1,7 @@
 import Navbar from '@/components/Navbar';
-import MovieCard from '@/components/MovieCard';
 import Footer from '@/components/Footer';
+import GenreMovieGrid from '@/components/GenreMovieGrid';
+import { fetchMovies } from '@/lib/api';
 import type { Movie } from '@/lib/types';
 import type { Metadata } from 'next';
 
@@ -41,14 +42,8 @@ export default async function GenrePage({ params }: { params: { name: string } }
 
   try {
     const russianGenre = slugMap[genreSlug] || genreSlug;
-    const url = `${process.env.NEXT_PUBLIC_API_URL || 'https://onrender.com'}/api/movies?genre=${encodeURIComponent(russianGenre)}`;
-    const res = await fetch(url, { cache: 'no-store' });
-    
-    if (!res.ok) {
-      throw new Error(`Ошибка загрузки: ${res.status}`);
-    }
-    
-    const data = await res.json();
+    // Используем fetchMovies, который сам подставляет url и кеш no-store
+    const data = await fetchMovies('', russianGenre, 1);
     movies = data.movies || [];
   } catch (err: any) {
     console.error('Genre fetch error:', err);
@@ -60,13 +55,10 @@ export default async function GenrePage({ params }: { params: { name: string } }
       <Navbar />
       <main className="pt-24 pb-12 px-4 min-h-screen">
         <div className="max-w-7xl mx-auto">
-          <div className="mb-10 border-b border-white/10 pb-6">
+          <div className="mb-2">
             <h1 className="font-display font-black text-3xl md:text-4xl text-white">
               {genreTitle}
             </h1>
-            <p className="text-white/50 mt-2">
-              Найдено фильмов: {movies.length}
-            </p>
           </div>
 
           {error ? (
@@ -80,17 +72,8 @@ export default async function GenrePage({ params }: { params: { name: string } }
                 Обновить страницу
               </a>
             </div>
-          ) : movies.length === 0 ? (
-            <div className="text-center py-20">
-              <h2 className="text-xl font-semibold text-white mb-2">Ничего не найдено</h2>
-              <p className="text-white/50">В этом жанре пока нет популярных фильмов.</p>
-            </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
-              {movies.map((movie) => (
-                <MovieCard key={movie.id} movie={movie} />
-              ))}
-            </div>
+            <GenreMovieGrid initialMovies={movies} genreSlug={genreSlug} />
           )}
         </div>
       </main>

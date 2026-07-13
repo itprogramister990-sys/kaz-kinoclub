@@ -68,6 +68,7 @@ function formatMovie(tmdbMovie) {
 router.get('/', async (req, res) => {
   try {
     const { q, genre } = req.query;
+    const page = req.query.page || 1;
 
     if (!TMDB_API_KEY) {
       console.warn("TMDB_API_KEY is not set!");
@@ -77,9 +78,9 @@ router.get('/', async (req, res) => {
     let url = '';
     
     if (q && q.trim()) {
-      url = `${TMDB_BASE_URL}/search/movie?api_key=${TMDB_API_KEY}&language=ru-RU&query=${encodeURIComponent(q.trim())}&page=1`;
+      url = `${TMDB_BASE_URL}/search/movie?api_key=${TMDB_API_KEY}&language=ru-RU&query=${encodeURIComponent(q.trim())}&page=${page}`;
     } else {
-      url = `${TMDB_BASE_URL}/discover/movie?api_key=${TMDB_API_KEY}&language=ru-RU&sort_by=popularity.desc&page=1`;
+      url = `${TMDB_BASE_URL}/discover/movie?api_key=${TMDB_API_KEY}&language=ru-RU&sort_by=popularity.desc&page=${page}`;
       
       if (genre && GENRE_MAP[genre.toLowerCase()]) {
         url += `&with_genres=${GENRE_MAP[genre.toLowerCase()]}`;
@@ -111,20 +112,32 @@ router.get('/top', async (req, res) => {
       return res.status(500).json({ error: 'TMDB_API_KEY is missing' });
     }
 
-    // Запрашиваем 2 страницы для большего количества фильмов (20 * 2 = 40 фильмов)
-    const [page1Res, page2Res] = await Promise.all([
+    // Запрашиваем 5 страниц (20 * 5 = 100 фильмов)
+    const [page1Res, page2Res, page3Res, page4Res, page5Res] = await Promise.all([
       fetch(`${TMDB_BASE_URL}/movie/top_rated?api_key=${TMDB_API_KEY}&language=ru-RU&page=1`),
-      fetch(`${TMDB_BASE_URL}/movie/top_rated?api_key=${TMDB_API_KEY}&language=ru-RU&page=2`)
+      fetch(`${TMDB_BASE_URL}/movie/top_rated?api_key=${TMDB_API_KEY}&language=ru-RU&page=2`),
+      fetch(`${TMDB_BASE_URL}/movie/top_rated?api_key=${TMDB_API_KEY}&language=ru-RU&page=3`),
+      fetch(`${TMDB_BASE_URL}/movie/top_rated?api_key=${TMDB_API_KEY}&language=ru-RU&page=4`),
+      fetch(`${TMDB_BASE_URL}/movie/top_rated?api_key=${TMDB_API_KEY}&language=ru-RU&page=5`)
     ]);
 
-    if (!page1Res.ok || !page2Res.ok) {
+    if (!page1Res.ok || !page2Res.ok || !page3Res.ok || !page4Res.ok || !page5Res.ok) {
       throw new Error(`TMDB responded with error`);
     }
 
     const data1 = await page1Res.json();
     const data2 = await page2Res.json();
+    const data3 = await page3Res.json();
+    const data4 = await page4Res.json();
+    const data5 = await page5Res.json();
     
-    const results = [...(data1.results || []), ...(data2.results || [])];
+    const results = [
+      ...(data1.results || []),
+      ...(data2.results || []),
+      ...(data3.results || []),
+      ...(data4.results || []),
+      ...(data5.results || [])
+    ];
     const movies = results.map(formatMovie);
 
     res.json({ movies, total: movies.length });
