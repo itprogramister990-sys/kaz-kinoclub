@@ -185,7 +185,7 @@ export default function SearchBar() {
             {/* Год */}
             <div>
               <label className="block text-sm font-medium text-white/70 mb-3">Год выпуска</label>
-              <div className="grid grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2">
+              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2">
                 {years.map(y => (
                   <label key={y} className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 cursor-pointer transition-colors border border-transparent hover:border-white/10">
                     <div className="relative flex items-center justify-center">

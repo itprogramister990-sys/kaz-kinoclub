@@ -19,7 +19,6 @@ export default function Navbar() {
               <span className="font-display font-black text-lg md:text-xl text-white">
                 Кино<span className="text-gradient-red">Клуб</span>
               </span>
-              <p className="text-white/50 text-xs leading-none">Казахстан</p>
             </div>
           </Link>
 
