@@ -16,17 +16,19 @@ export const metadata: Metadata = {
 export const revalidate = 43200;
 
 interface HomePageProps {
-  searchParams: { q?: string };
+  searchParams: { q?: string; year?: string; genre?: string };
 }
 
 export default async function Home({ searchParams }: HomePageProps) {
   const query = searchParams.q || '';
+  const year = searchParams.year || '';
+  const genre = searchParams.genre || '';
 
   let movies: Movie[] = [];
   let error = '';
 
   try {
-    const data = await fetchMovies(query);
+    const data = await fetchMovies(query, genre, undefined, year);
     movies = data.movies;
   } catch (err: any) {
     error = 'Сервер просыпается, обновите страницу. Это может занять около 50 секунд.';
@@ -64,7 +66,9 @@ export default async function Home({ searchParams }: HomePageProps) {
                 </h2>
               )}
             </div>
-            <SearchBar initialQuery={query} />
+            <Suspense fallback={<div className="h-16 bg-white/5 rounded-2xl animate-pulse w-full max-w-2xl mx-auto"></div>}>
+              <SearchBar />
+            </Suspense>
           </div>
         </section>
 
@@ -101,7 +105,7 @@ export default async function Home({ searchParams }: HomePageProps) {
               </div>
             ) : (
               <>
-                <MainMovieGrid initialMovies={movies} query={query} />
+                <MainMovieGrid initialMovies={movies} query={query} genre={genre} year={year} />
               </>
             )}
           </div>

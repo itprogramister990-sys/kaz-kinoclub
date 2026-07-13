@@ -4,12 +4,13 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://onrender.com';
 
 // ─── Movies ──────────────────────────────────────────────────────────────────
 
-export async function fetchMovies(query?: string, genre?: string, page?: number): Promise<MoviesResponse> {
+export async function fetchMovies(query?: string, genre?: string, page?: number, year?: string): Promise<MoviesResponse> {
   let url = `${API_BASE}/api/movies`;
   const params = new URLSearchParams();
   if (query) params.append('q', query);
   if (genre) params.append('genre', genre);
   if (page) params.append('page', page.toString());
+  if (year) params.append('year', year);
   
   const queryString = params.toString();
   if (queryString) url += `?${queryString}`;

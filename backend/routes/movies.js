@@ -68,7 +68,7 @@ function formatMovie(tmdbMovie) {
 // GET /api/movies — все фильмы (с поиском и фильтром)
 router.get('/', async (req, res) => {
   try {
-    const { q, genre } = req.query;
+    const { q, genre, year } = req.query;
     const page = req.query.page || 1;
 
     if (!TMDB_API_KEY) {
@@ -80,11 +80,17 @@ router.get('/', async (req, res) => {
     
     if (q && q.trim()) {
       url = `${TMDB_BASE_URL}/search/movie?api_key=${TMDB_API_KEY}&language=ru-RU&query=${encodeURIComponent(q.trim())}&page=${page}`;
+      if (year) {
+        url += `&primary_release_year=${year}`;
+      }
     } else {
       url = `${TMDB_BASE_URL}/discover/movie?api_key=${TMDB_API_KEY}&language=ru-RU&sort_by=popularity.desc&page=${page}`;
       
       if (genre && GENRE_MAP[genre.toLowerCase()]) {
         url += `&with_genres=${GENRE_MAP[genre.toLowerCase()]}`;
+      }
+      if (year) {
+        url += `&primary_release_year=${year}`;
       }
     }
 
@@ -94,7 +100,13 @@ router.get('/', async (req, res) => {
     }
     
     const data = await response.json();
-    const results = data.results || [];
+    let results = data.results || [];
+    
+    // Если был текстовый поиск и одновременно жанр — фильтруем вручную (т.к. TMDB search не поддерживает with_genres)
+    if (q && q.trim() && genre && GENRE_MAP[genre.toLowerCase()]) {
+      const targetGenreId = GENRE_MAP[genre.toLowerCase()];
+      results = results.filter(m => (m.genre_ids || []).includes(targetGenreId));
+    }
     
     // Преобразуем формат TMDB в наш внутренний формат
     const movies = results.map(formatMovie);
