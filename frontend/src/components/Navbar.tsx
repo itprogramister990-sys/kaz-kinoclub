@@ -53,6 +53,9 @@ export default function Navbar() {
             <Link href="/?genre=comedy" className="text-white/80 hover:text-white transition-colors text-sm font-medium">
               Комедии
             </Link>
+            <Link href="/?genre=horror" className="text-white/80 hover:text-white transition-colors text-sm font-medium">
+              Ужасы
+            </Link>
           </div>
 
           {/* Search */}

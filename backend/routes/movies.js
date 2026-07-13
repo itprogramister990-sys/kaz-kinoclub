@@ -9,7 +9,8 @@ const GENRE_MAP = {
   'drama': 18,
   'fiction': 878, // Science Fiction
   'action': 28,
-  'comedy': 35
+  'comedy': 35,
+  'horror': 27
 };
 
 // Map TMDB IDs back to textual genres for display
