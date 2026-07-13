@@ -47,6 +47,12 @@ export default function Navbar() {
             <Link href="/?genre=fiction" className="text-white/80 hover:text-white transition-colors text-sm font-medium">
               Фантастика
             </Link>
+            <Link href="/?genre=action" className="text-white/80 hover:text-white transition-colors text-sm font-medium">
+              Боевики
+            </Link>
+            <Link href="/?genre=comedy" className="text-white/80 hover:text-white transition-colors text-sm font-medium">
+              Комедии
+            </Link>
           </div>
 
           {/* Search */}

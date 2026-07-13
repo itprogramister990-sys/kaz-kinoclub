@@ -56,11 +56,8 @@ router.post('/', (req, res) => {
       return res.status(400).json({ error: 'Комментарий слишком короткий (минимум 5 символов)' });
     }
 
-    // Проверяем существование фильма
-    const movie = queryOne('SELECT id FROM movies WHERE id = ?', [parseInt(movie_id, 10)]);
-    if (!movie) {
-      return res.status(404).json({ error: 'Фильм не найден' });
-    }
+    // Мы больше не проверяем локальную базу фильмов, так как используем TMDB IDs.
+    // Если нужно, можно добавить fetch-проверку к TMDB, но для скорости мы доверяем фронтенду.
 
     // ✅ Параметризованный INSERT — защита от SQL-инъекций
     const result = run(

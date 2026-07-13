@@ -32,28 +32,20 @@ function saveDb() {
   fs.writeFileSync(DB_PATH, Buffer.from(data));
 }
 
-// Создание схемы
+// Создание схемы (очищаем старую базу и создаем новую)
 function createSchema() {
-  db.run(`
-    CREATE TABLE IF NOT EXISTS movies (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      title TEXT NOT NULL,
-      description TEXT NOT NULL,
-      poster_url TEXT,
-      partner_link TEXT,
-      genre TEXT,
-      year INTEGER,
-      rating REAL DEFAULT 0,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    );
+  // Так как мы переходим на TMDB, локальные фильмы больше не нужны.
+  // Очищаем старые таблицы.
+  db.run(`DROP TABLE IF EXISTS comments`);
+  db.run(`DROP TABLE IF EXISTS movies`);
 
+  db.run(`
     CREATE TABLE IF NOT EXISTS comments (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       user_name TEXT NOT NULL,
       movie_id INTEGER NOT NULL,
       text TEXT NOT NULL,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (movie_id) REFERENCES movies(id)
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
 
     CREATE INDEX IF NOT EXISTS idx_comments_movie_id ON comments(movie_id);
