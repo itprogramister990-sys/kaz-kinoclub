@@ -200,7 +200,7 @@ export default async function MoviePage({ params }: MoviePageProps) {
           </div>
           <div className="w-full aspect-video rounded-xl overflow-hidden shadow-2xl bg-gray-900 border border-gray-800">
             <iframe 
-              src={`https://vidsrc.cc/v2/embed/movie/${movie.id}`} 
+              src={`https://kinobox.tv/api/players?tmdb=${movie.id}`} 
               className="w-full h-full border-0" 
               allowFullScreen 
               sandbox="allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-presentation allow-same-origin allow-scripts"
