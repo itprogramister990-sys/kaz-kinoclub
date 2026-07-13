@@ -200,7 +200,7 @@ export default async function MoviePage({ params }: MoviePageProps) {
           </div>
           <div className="w-full aspect-video rounded-xl overflow-hidden shadow-2xl bg-gray-900 border border-gray-800">
             <iframe 
-              src={`https://kinobox.tv/api/players?tmdb=${movie.id}`} 
+              src={`https://collapse.video/embed/movie/${movie.id}`} 
               className="w-full h-full border-0" 
               allowFullScreen 
             />
