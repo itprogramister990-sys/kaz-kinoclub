@@ -68,7 +68,7 @@ function formatMovie(tmdbMovie) {
     title: tmdbMovie.title || tmdbMovie.original_title,
     description: tmdbMovie.overview || 'Описание отсутствует.',
     poster_url: tmdbMovie.poster_path ? `https://image.tmdb.org/t/p/w500${tmdbMovie.poster_path}` : null,
-    partner_link: `https://www.kinopoisk.ru/index.php?kp_query=${encodeURIComponent(tmdbMovie.title || tmdbMovie.original_title)}`,
+    partner_link: `https://kinopoisk.ru/index.php?kp_query=${encodeURIComponent(tmdbMovie.title || tmdbMovie.original_title)}`,
     genre: genreText,
     year: year,
     rating: tmdbMovie.vote_average || 0,

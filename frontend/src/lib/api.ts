@@ -37,7 +37,7 @@ export async function fetchTopMovies(): Promise<MoviesResponse> {
 
 export async function fetchMovie(id: number | string): Promise<Movie> {
   const res = await fetch(`${API_BASE}/api/movies/${id}`, {
-    next: { revalidate: 43200 },
+    next: { revalidate: 0 },
   });
 
   if (!res.ok) {
