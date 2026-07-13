@@ -62,7 +62,7 @@ export default function HeroBanner({ movie }: HeroBannerProps) {
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M8 5v14l11-7z" />
               </svg>
-              Смотреть
+              Смотреть онлайн
             </Link>
             <Link
               href={`/movies/${movie.id}`}

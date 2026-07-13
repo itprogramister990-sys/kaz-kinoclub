@@ -144,23 +144,16 @@ export default async function MoviePage({ params }: MoviePageProps) {
                     </button>
                   ) : (
                     <a
-                      href={movie.partner_link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      id="watch-legal-btn"
+                      href="#video-player"
                       className="inline-flex items-center gap-3 bg-brand-gradient text-white font-bold
                                  text-base md:text-lg px-8 py-4 rounded-xl hover:shadow-glow-red
                                  transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg"
-                      aria-label={`Смотреть ${movie.title} легально на Кинопоиске`}
+                      aria-label={`Смотреть ${movie.title} фильм`}
                     >
                       <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
                       </svg>
-                      Смотреть легально на Кинопоиске
-                      <svg className="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                          d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                      </svg>
+                      Смотреть фильм
                     </a>
                   )}
 
@@ -177,13 +170,7 @@ export default async function MoviePage({ params }: MoviePageProps) {
                   </a>
                 </div>
 
-                {/* Legal badge */}
-                <div className="mt-6 inline-flex items-center gap-2 text-green-400/70 text-xs bg-green-500/10 border border-green-500/20 rounded-full px-4 py-2">
-                  <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  Только легальный просмотр — поддержите создателей!
-                </div>
+
               </div>
             </div>
           </div>
@@ -204,6 +191,22 @@ export default async function MoviePage({ params }: MoviePageProps) {
             </div>
           </section>
         )}
+
+        {/* ─── Video Player ─────────────────────────────────────────────── */}
+        <section id="video-player" className="max-w-4xl mx-auto px-4 sm:px-6 pb-12 pt-8">
+          <div className="flex items-center gap-3 mb-6">
+            <h2 className="text-2xl font-bold text-white">Смотреть онлайн</h2>
+            <div className="px-3 py-1 bg-brand-red/20 text-brand-red text-xs font-bold rounded-md uppercase tracking-wider">HD 1080</div>
+          </div>
+          <div className="w-full aspect-video rounded-xl overflow-hidden shadow-2xl bg-gray-900 border border-gray-800">
+            <iframe 
+              src={`https://vidsrc.to/embed/movie/${movie.id}`} 
+              className="w-full h-full border-0" 
+              allowFullScreen 
+              sandbox="allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-presentation allow-same-origin allow-scripts"
+            />
+          </div>
+        </section>
 
         {/* ─── Comments ───────────────────────────────────────────────── */}
         <section id="comments-section" className="max-w-3xl mx-auto px-4 sm:px-6 pb-16">
