@@ -6,19 +6,19 @@ const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
 
 // Map textual genres from frontend to TMDB numeric IDs
 const GENRE_MAP = {
-  'драма и комедия': '18,35',
-  'экшен и триллер': '28,53',
-  'ужасы': '27',
-  'фантастика и фэнтези': '878,14',
-  'мелодрама и детектив': '10749,9648',
-  'приключения и вестерн': '12,37',
-  'биопик и исторический': '36',
-  'мюзикл и музыкальный': '10402',
-  'нуар': '80',
-  'документальное и научно-популярное': '99',
-  'мультфильмы': '16',
+  'drama_comedy': '18,35',
+  'action_thriller': '28,53',
+  'horror': '27',
+  'sci_fi_fantasy': '878,14',
+  'romance_mystery': '10749,9648',
+  'adventure_western': '12,37',
+  'history': '36',
+  'music': '10402',
+  'noir': '80',
+  'documentary': '99',
+  'cartoon': '16',
 
-  // Для совместимости со старыми ссылками (если они есть)
+  // Для совместимости со старыми ссылками
   'drama': '18',
   'драма': '18',
   'fiction': '878',
@@ -27,8 +27,8 @@ const GENRE_MAP = {
   'боевик': '28',
   'comedy': '35',
   'комедия': '35',
-  'horror': '27',
-  'cartoon': '16'
+  'ужасы': '27',
+  'мультфильмы': '16'
 };
 
 // Map TMDB IDs back to textual genres for display
@@ -79,7 +79,8 @@ function formatMovie(tmdbMovie) {
 // GET /api/movies — все фильмы (с поиском и фильтром)
 router.get('/', async (req, res) => {
   try {
-    const { q, genre, year } = req.query;
+    const { q, genres, year } = req.query;
+    const inputGenres = genres || req.query.genre;
     const page = req.query.page || 1;
 
     if (!TMDB_API_KEY) {
@@ -88,6 +89,18 @@ router.get('/', async (req, res) => {
     }
 
     let url = '';
+    let targetGenreIds = [];
+    
+    if (inputGenres) {
+      const parts = inputGenres.split(',');
+      for (const p of parts) {
+        const mapped = GENRE_MAP[p.trim().toLowerCase()];
+        if (mapped) {
+          mapped.split(',').forEach(id => targetGenreIds.push(Number(id)));
+        }
+      }
+      targetGenreIds = [...new Set(targetGenreIds)];
+    }
     
     if (q && q.trim()) {
       url = `${TMDB_BASE_URL}/search/movie?api_key=${TMDB_API_KEY}&language=ru-RU&query=${encodeURIComponent(q.trim())}&page=${page}`;
@@ -97,8 +110,8 @@ router.get('/', async (req, res) => {
     } else {
       url = `${TMDB_BASE_URL}/discover/movie?api_key=${TMDB_API_KEY}&language=ru-RU&sort_by=popularity.desc&page=${page}`;
       
-      if (genre && GENRE_MAP[genre.toLowerCase()]) {
-        url += `&with_genres=${GENRE_MAP[genre.toLowerCase()]}`;
+      if (targetGenreIds.length > 0) {
+        url += `&with_genres=${targetGenreIds.join(',')}`;
       }
       if (year) {
         url += `&primary_release_year=${year}`;
@@ -114,8 +127,7 @@ router.get('/', async (req, res) => {
     let results = data.results || [];
     
     // Если был текстовый поиск и одновременно жанр — фильтруем вручную (т.к. TMDB search не поддерживает with_genres)
-    if (q && q.trim() && genre && GENRE_MAP[genre.toLowerCase()]) {
-      const targetGenreIds = String(GENRE_MAP[genre.toLowerCase()]).split(',').map(Number);
+    if (q && q.trim() && targetGenreIds.length > 0) {
       results = results.filter(m => {
         const ids = m.genre_ids || [];
         // Проверяем, что все указанные ID присутствуют у фильма (логика AND, как в TMDB with_genres)

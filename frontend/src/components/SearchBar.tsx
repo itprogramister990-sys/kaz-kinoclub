@@ -3,42 +3,50 @@
 import { useState, useTransition } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
+const GENRE_OPTIONS = [
+  { slug: 'drama_comedy', label: 'Драма и Комедия' },
+  { slug: 'action_thriller', label: 'Экшен и Триллер' },
+  { slug: 'horror', label: 'Ужасы' },
+  { slug: 'sci_fi_fantasy', label: 'Фантастика и Фэнтези' },
+  { slug: 'romance_mystery', label: 'Мелодрама и Детектив' },
+  { slug: 'adventure_western', label: 'Приключения и Вестерн' },
+  { slug: 'history', label: 'Биопик и Исторический' },
+  { slug: 'music', label: 'Мюзикл и Музыкальный' },
+  { slug: 'noir', label: 'Нуар' },
+  { slug: 'documentary', label: 'Документальное кино' },
+  { slug: 'cartoon', label: 'Мультфильмы' }
+];
+
 export default function SearchBar() {
   const router = useRouter();
   const searchParams = useSearchParams();
   
   const initialQuery = searchParams.get('q') || '';
-  const initialGenre = searchParams.get('genre') || '';
+  const initialGenres = searchParams.get('genres') || searchParams.get('genre') || '';
   const initialYear = searchParams.get('year') || '';
 
   const [query, setQuery] = useState(initialQuery);
-  const [genre, setGenre] = useState(initialGenre);
+  const [selectedGenres, setSelectedGenres] = useState<string[]>(
+    initialGenres ? initialGenres.split(',') : []
+  );
   const [year, setYear] = useState(initialYear);
   const [showFilters, setShowFilters] = useState(false);
   const [isPending, startTransition] = useTransition();
 
   const years = Array.from({ length: 27 }, (_, i) => 2026 - i);
-  const genres = [
-    'Все',
-    'Драма и Комедия',
-    'Экшен и Триллер',
-    'Ужасы',
-    'Фантастика и Фэнтези',
-    'Мелодрама и Детектив',
-    'Приключения и Вестерн',
-    'Биопик и Исторический',
-    'Мюзикл и Музыкальный',
-    'Нуар',
-    'Документальное и Научно-популярное',
-    'Мультфильмы'
-  ];
+
+  const toggleGenre = (slug: string) => {
+    setSelectedGenres(prev => 
+      prev.includes(slug) ? prev.filter(g => g !== slug) : [...prev, slug]
+    );
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     startTransition(() => {
       const params = new URLSearchParams();
       if (query.trim()) params.append('q', query.trim());
-      if (genre && genre !== 'Все') params.append('genre', genre);
+      if (selectedGenres.length > 0) params.append('genres', selectedGenres.join(','));
       if (year && year !== 'Все') params.append('year', year);
 
       const qs = params.toString();
@@ -49,13 +57,13 @@ export default function SearchBar() {
 
   const handleClear = () => {
     setQuery('');
-    setGenre('');
+    setSelectedGenres([]);
     setYear('');
     router.push('/');
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto relative">
+    <div className="w-full max-w-2xl mx-auto relative z-50">
       <form onSubmit={handleSubmit} role="search" aria-label="Поиск фильмов">
         <div className="relative flex items-center">
           {/* Search icon */}
@@ -81,7 +89,7 @@ export default function SearchBar() {
           {/* Controls right side */}
           <div className="absolute right-2 flex items-center gap-2">
             {/* Clear button */}
-            {(query || genre || year) && (
+            {(query || selectedGenres.length > 0 || year) && (
               <button
                 type="button"
                 onClick={handleClear}
@@ -132,41 +140,62 @@ export default function SearchBar() {
 
       {/* Expandable Filters Panel */}
       {showFilters && (
-        <div className="absolute top-full left-0 right-0 mt-3 p-5 bg-[#151525]/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl z-50 animate-slide-up">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-white/70 mb-2">Жанр</label>
-              <select
-                value={genre}
-                onChange={(e) => setGenre(e.target.value)}
-                className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand-red/50 appearance-none"
-              >
-                <option value="">Все</option>
-                {genres.filter(g => g !== 'Все').map(g => (
-                  <option key={g} value={g}>{g}</option>
+        <div className="absolute top-full left-0 right-0 mt-3 p-5 bg-[#151525]/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl animate-slide-up text-left">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            {/* Жанры (2 колонки) */}
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium text-white/70 mb-3">Жанры (можно выбрать несколько)</label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
+                {GENRE_OPTIONS.map((genre) => (
+                  <label key={genre.slug} className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 cursor-pointer transition-colors border border-transparent hover:border-white/10">
+                    <div className="relative flex items-center justify-center">
+                      <input
+                        type="checkbox"
+                        checked={selectedGenres.includes(genre.slug)}
+                        onChange={() => toggleGenre(genre.slug)}
+                        className="peer appearance-none w-5 h-5 border-2 border-white/30 rounded focus:outline-none checked:bg-brand-red checked:border-brand-red transition-all cursor-pointer"
+                      />
+                      <svg
+                        className="absolute w-3.5 h-3.5 text-white opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth="3"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <span className="text-white/80 text-sm select-none peer-checked:text-white peer-checked:font-medium transition-all">
+                      {genre.label}
+                    </span>
+                  </label>
                 ))}
-              </select>
+              </div>
             </div>
+
+            {/* Год (1 колонка) */}
             <div>
-              <label className="block text-sm font-medium text-white/70 mb-2">Год выпуска</label>
+              <label className="block text-sm font-medium text-white/70 mb-3">Год выпуска</label>
               <select
                 value={year}
                 onChange={(e) => setYear(e.target.value)}
-                className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand-red/50 appearance-none"
+                className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand-red/50 appearance-none cursor-pointer"
               >
-                <option value="">Все</option>
+                <option value="">За всё время</option>
                 {years.map(y => (
                   <option key={y} value={y}>{y}</option>
                 ))}
               </select>
             </div>
           </div>
+
           <div className="mt-6 flex justify-end">
              <button
                 type="button"
                 onClick={handleSubmit}
                 disabled={isPending}
-                className="bg-white/10 hover:bg-white/20 text-white font-medium px-6 py-2 rounded-xl transition-all"
+                className="bg-brand-red hover:bg-red-600 text-white font-medium px-8 py-2.5 rounded-xl transition-all shadow-glow-red hover:scale-105 active:scale-95"
              >
                Применить фильтры
              </button>
