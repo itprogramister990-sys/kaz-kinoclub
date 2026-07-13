@@ -9,9 +9,9 @@ export default function AdsterraButton() {
   return (
     <button
       onClick={handleClick}
-      className="w-full flex items-center justify-center gap-3 bg-red-600 text-white font-black text-lg md:text-xl px-6 py-5 rounded-2xl hover:bg-red-500 transition-all duration-300 hover:scale-[1.02] active:scale-95 shadow-[0_0_30px_rgba(220,38,38,0.5)] animate-pulse"
+      className="w-full md:w-auto bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg mb-4 animate-pulse transition duration-300 shadow-lg text-center"
     >
-      🚀 Включить Fast-Stream / Выбрать озвучку (1080p Full HD)
+      🚀 Разблокировать Стриминг HD 1080p / Выбрать озвучку
     </button>
   );
 }

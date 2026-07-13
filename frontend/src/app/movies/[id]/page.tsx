@@ -183,16 +183,17 @@ export default async function MoviePage({ params }: MoviePageProps) {
             <h2 className="text-2xl font-bold text-white">Смотреть онлайн</h2>
             <div className="px-3 py-1 bg-brand-red/20 text-brand-red text-xs font-bold rounded-md uppercase tracking-wider">HD 1080</div>
           </div>
-          <div className="w-full aspect-video rounded-xl overflow-hidden my-8 shadow-2xl bg-gray-900 border border-gray-800">
+
+          <div className="flex justify-center w-full mb-4">
+            <AdsterraButton />
+          </div>
+
+          <div className="w-full aspect-video rounded-xl overflow-hidden shadow-2xl bg-gray-900 border border-gray-800">
             <iframe 
-              src={`https://www.2embed.cc/embed/${movie.id}`} 
+              src={`https://vidsrc.cc/v2/embed/movie/${movie.id}`} 
               className="w-full h-full border-0" 
               allowFullScreen 
             />
-          </div>
-          
-          <div className="max-w-2xl mx-auto mb-8 mt-2">
-            <AdsterraButton />
           </div>
           
           <div className="flex justify-center mt-6">
