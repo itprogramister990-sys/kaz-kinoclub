@@ -18,7 +18,20 @@ export default function SearchBar() {
   const [isPending, startTransition] = useTransition();
 
   const years = Array.from({ length: 27 }, (_, i) => 2026 - i);
-  const genres = ['Все', 'Боевик', 'Комедия', 'Драма', 'Фантастика', 'Ужасы', 'Мультфильмы'];
+  const genres = [
+    'Все',
+    'Драма и Комедия',
+    'Экшен и Триллер',
+    'Ужасы',
+    'Фантастика и Фэнтези',
+    'Мелодрама и Детектив',
+    'Приключения и Вестерн',
+    'Биопик и Исторический',
+    'Мюзикл и Музыкальный',
+    'Нуар',
+    'Документальное и Научно-популярное',
+    'Мультфильмы'
+  ];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

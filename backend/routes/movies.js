@@ -6,18 +6,29 @@ const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
 
 // Map textual genres from frontend to TMDB numeric IDs
 const GENRE_MAP = {
-  'drama': 18,
-  'драма': 18,
-  'fiction': 878, // Science Fiction
-  'фантастика': 878,
-  'action': 28,
-  'боевик': 28,
-  'comedy': 35,
-  'комедия': 35,
-  'horror': 27,
-  'ужасы': 27,
-  'cartoon': 16,
-  'мультфильмы': 16
+  'драма и комедия': '18,35',
+  'экшен и триллер': '28,53',
+  'ужасы': '27',
+  'фантастика и фэнтези': '878,14',
+  'мелодрама и детектив': '10749,9648',
+  'приключения и вестерн': '12,37',
+  'биопик и исторический': '36',
+  'мюзикл и музыкальный': '10402',
+  'нуар': '80',
+  'документальное и научно-популярное': '99',
+  'мультфильмы': '16',
+
+  // Для совместимости со старыми ссылками (если они есть)
+  'drama': '18',
+  'драма': '18',
+  'fiction': '878',
+  'фантастика': '878',
+  'action': '28',
+  'боевик': '28',
+  'comedy': '35',
+  'комедия': '35',
+  'horror': '27',
+  'cartoon': '16'
 };
 
 // Map TMDB IDs back to textual genres for display
@@ -104,8 +115,12 @@ router.get('/', async (req, res) => {
     
     // Если был текстовый поиск и одновременно жанр — фильтруем вручную (т.к. TMDB search не поддерживает with_genres)
     if (q && q.trim() && genre && GENRE_MAP[genre.toLowerCase()]) {
-      const targetGenreId = GENRE_MAP[genre.toLowerCase()];
-      results = results.filter(m => (m.genre_ids || []).includes(targetGenreId));
+      const targetGenreIds = String(GENRE_MAP[genre.toLowerCase()]).split(',').map(Number);
+      results = results.filter(m => {
+        const ids = m.genre_ids || [];
+        // Проверяем, что все указанные ID присутствуют у фильма (логика AND, как в TMDB with_genres)
+        return targetGenreIds.every(id => ids.includes(id));
+      });
     }
     
     // Преобразуем формат TMDB в наш внутренний формат
