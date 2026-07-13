@@ -5,6 +5,8 @@ import Navbar from '@/components/Navbar';
 import Comments from '@/components/Comments';
 import Footer from '@/components/Footer';
 import { fetchMovie, fetchComments } from '@/lib/api';
+import type { Movie } from '@/lib/types';
+import type { Comment } from '@/lib/types';
 import type { Metadata } from 'next';
 
 interface MoviePageProps {
@@ -29,8 +31,8 @@ export async function generateMetadata({ params }: MoviePageProps): Promise<Meta
 }
 
 export default async function MoviePage({ params }: MoviePageProps) {
-  let movie;
-  let comments = [];
+  let movie: Movie | undefined;
+  let comments: Comment[] = [];
 
   try {
     movie = await fetchMovie(params.id);
@@ -59,6 +61,10 @@ export default async function MoviePage({ params }: MoviePageProps) {
   } catch {
     // Comments fail silently
   }
+
+  // Narrowing guard — TypeScript cannot infer that movie is always set
+  // after the catch block (which either returns or calls notFound).
+  if (!movie) return notFound();
 
   return (
     <>
