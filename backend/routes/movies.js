@@ -109,7 +109,7 @@ router.get('/', async (req, res) => {
     }
     
     if (q && q.trim()) {
-      url = `${TMDB_BASE_URL}/search/movie?api_key=${TMDB_API_KEY}&language=ru-RU&query=${encodeURIComponent(q.trim())}&page=${page}`;
+      url = `${TMDB_BASE_URL}/search/movie?api_key=${TMDB_API_KEY}&language=ru-RU&query=${encodeURIComponent(q.trim())}&page=${page}&include_adult=false`;
       if (targetYears.length === 1) {
         url += `&primary_release_year=${targetYears[0]}`;
       } else if (targetYears.length > 1) {

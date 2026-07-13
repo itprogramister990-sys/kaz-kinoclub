@@ -149,12 +149,12 @@ export default function SearchBar() {
       {/* Expandable Filters Panel */}
       {showFilters && (
         <div className="absolute top-full left-0 right-0 mt-3 p-5 bg-[#151525]/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl animate-slide-up text-left">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="flex flex-col gap-6">
             
-            {/* Жанры (2 колонки) */}
-            <div className="md:col-span-2">
+            {/* Жанры */}
+            <div>
               <label className="block text-sm font-medium text-white/70 mb-3">Жанры (можно выбрать несколько)</label>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
                 {GENRE_OPTIONS.map((genre) => (
                   <label key={genre.slug} className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 cursor-pointer transition-colors border border-transparent hover:border-white/10">
                     <div className="relative flex items-center justify-center">
@@ -182,10 +182,10 @@ export default function SearchBar() {
               </div>
             </div>
 
-            {/* Год (1 колонка) */}
+            {/* Год */}
             <div>
               <label className="block text-sm font-medium text-white/70 mb-3">Год выпуска</label>
-              <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
+              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-2">
                 {years.map(y => (
                   <label key={y} className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 cursor-pointer transition-colors border border-transparent hover:border-white/10">
                     <div className="relative flex items-center justify-center">
