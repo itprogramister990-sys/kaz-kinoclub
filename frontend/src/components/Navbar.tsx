@@ -60,6 +60,9 @@ export default function Navbar() {
             <Link href="/genre/horror" className="text-white/80 hover:text-white transition-colors text-sm font-medium">
               Ужасы
             </Link>
+            <Link href="/genre/cartoon" className="text-white/80 hover:text-white transition-colors text-sm font-medium">
+              Мультфильмы
+            </Link>
           </div>
 
           {/* Search */}

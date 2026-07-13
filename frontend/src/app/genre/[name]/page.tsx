@@ -10,7 +10,8 @@ const GENRE_TITLES: Record<string, string> = {
   'fiction': 'Фантастика',
   'action': 'Боевики',
   'comedy': 'Комедии',
-  'horror': 'Ужасы'
+  'horror': 'Ужасы',
+  'cartoon': 'Мультфильмы'
 };
 
 export async function generateMetadata({ params }: { params: { name: string } }): Promise<Metadata> {

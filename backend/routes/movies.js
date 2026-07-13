@@ -10,7 +10,8 @@ const GENRE_MAP = {
   'fiction': 878, // Science Fiction
   'action': 28,
   'comedy': 35,
-  'horror': 27
+  'horror': 27,
+  'cartoon': 16
 };
 
 // Map TMDB IDs back to textual genres for display
@@ -36,8 +37,13 @@ const TMDB_GENRES_REVERSE = {
 };
 
 function formatMovie(tmdbMovie) {
-  const genreId = tmdbMovie.genre_ids ? tmdbMovie.genre_ids[0] : (tmdbMovie.genres ? tmdbMovie.genres[0]?.id : null);
-  const genreText = genreId ? (TMDB_GENRES_REVERSE[genreId] || 'Кино') : 'Кино';
+  let genreTexts = [];
+  if (tmdbMovie.genre_ids) {
+    genreTexts = tmdbMovie.genre_ids.map(id => TMDB_GENRES_REVERSE[id]).filter(Boolean);
+  } else if (tmdbMovie.genres) {
+    genreTexts = tmdbMovie.genres.map(g => TMDB_GENRES_REVERSE[g.id]).filter(Boolean);
+  }
+  const genreText = genreTexts.length > 0 ? genreTexts.join(', ') : 'Кино';
   const year = tmdbMovie.release_date ? parseInt(tmdbMovie.release_date.substring(0, 4), 10) : 0;
   
   return {
