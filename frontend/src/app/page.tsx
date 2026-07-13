@@ -5,6 +5,7 @@ import MovieCard from '@/components/MovieCard';
 import SearchBar from '@/components/SearchBar';
 import Footer from '@/components/Footer';
 import { fetchMovies } from '@/lib/api';
+import type { Movie } from '@/lib/types';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -21,7 +22,7 @@ interface HomePageProps {
 export default async function HomePage({ searchParams }: HomePageProps) {
   const query = searchParams.q || '';
 
-  let movies = [];
+  let movies: Movie[] = [];
   let error = '';
 
   try {
