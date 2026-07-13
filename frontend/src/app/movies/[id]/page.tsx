@@ -144,7 +144,9 @@ export default async function MoviePage({ params }: MoviePageProps) {
                     </button>
                   ) : (
                     <a
-                      href="#video-player"
+                      href={`https://kinopoisk.ru/index.php?kp_query=${encodeURIComponent(movie.title)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="inline-flex items-center gap-3 bg-brand-gradient text-white font-bold
                                  text-base md:text-lg px-8 py-4 rounded-xl hover:shadow-glow-red
                                  transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg"
@@ -177,33 +179,36 @@ export default async function MoviePage({ params }: MoviePageProps) {
         </section>
 
         {/* ─── Trailer ────────────────────────────────────────────────── */}
-        {movie.youtube_key && (
-          <section className="max-w-3xl mx-auto px-4 sm:px-6 pb-12">
-            <h2 className="text-2xl font-bold text-white mb-6">Официальный трейлер</h2>
-            <div className="w-full aspect-video rounded-xl overflow-hidden shadow-2xl bg-gray-900 border border-white/10">
-              <iframe 
-                src={`https://www.youtube.com/embed/${movie.youtube_key}?rel=0`} 
-                className="w-full h-full border-0" 
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen 
-                title={`Трейлер: ${movie.title}`}
-              />
-            </div>
-          </section>
-        )}
-
-        {/* ─── Video Player ─────────────────────────────────────────────── */}
         <section id="video-player" className="max-w-4xl mx-auto px-4 sm:px-6 pb-12 pt-8">
-          <div className="flex items-center gap-3 mb-6">
-            <h2 className="text-2xl font-bold text-white">Смотреть онлайн</h2>
-            <div className="px-3 py-1 bg-brand-red/20 text-brand-red text-xs font-bold rounded-md uppercase tracking-wider">HD 1080</div>
+          <div className="w-full aspect-video rounded-xl overflow-hidden my-8 shadow-2xl bg-gray-900 border border-gray-800">
+            {movie.youtube_key ? (
+              <iframe 
+                src={`https://youtube.com/embed/${movie.youtube_key}`} 
+                className="w-full h-full border-0" 
+                allowFullScreen 
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-gray-400">
+                Трейлер к этому фильму временно недоступен
+              </div>
+            )}
           </div>
-          <div className="w-full aspect-video rounded-xl overflow-hidden shadow-2xl bg-gray-900 border border-gray-800">
-            <iframe 
-              src={`https://collapse.video/embed/movie/${movie.id}`} 
-              className="w-full h-full border-0" 
-              allowFullScreen 
-            />
+          
+          <div className="flex justify-center mt-6">
+            <a
+              href={`https://kinopoisk.ru/index.php?kp_query=${encodeURIComponent(movie.title)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-3 bg-brand-gradient text-white font-bold
+                         text-base md:text-lg px-10 py-4 rounded-xl hover:shadow-glow-red
+                         transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg"
+              aria-label={`Смотреть ${movie.title} фильм`}
+            >
+              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
+              </svg>
+              Смотреть фильм
+            </a>
           </div>
         </section>
 
