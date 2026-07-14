@@ -190,7 +190,7 @@ export default async function MoviePage({ params }: MoviePageProps) {
 
           <div className="w-full aspect-video rounded-xl overflow-hidden shadow-2xl bg-gray-900 border border-gray-800">
             <iframe 
-              src={`https://vcdn.to/embed/${movie.id}`} 
+              src={`https://vcdn.me/embed/${movie.id}`} 
               className="w-full h-full border-0" 
               allowFullScreen 
             />
