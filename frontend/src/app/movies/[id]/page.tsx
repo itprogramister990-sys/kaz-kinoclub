@@ -179,21 +179,23 @@ export default async function MoviePage({ params }: MoviePageProps) {
 
         {/* ─── Video Player ─────────────────────────────────────────────── */}
         <section id="video-player" className="max-w-4xl mx-auto px-4 sm:px-6 pb-12 pt-8">
-          <div className="flex items-center gap-3 mb-6">
-            <h2 className="text-2xl font-bold text-white">Смотреть онлайн</h2>
-            <div className="px-3 py-1 bg-brand-red/20 text-brand-red text-xs font-bold rounded-md uppercase tracking-wider">HD 1080</div>
+          <div className="flex flex-col md:flex-row justify-between items-center bg-gray-900/50 p-4 rounded-xl border border-gray-800">
+            <h2 className="text-2xl font-bold mb-4 md:mb-0">Смотреть онлайн</h2>
+            <AdsterraButton movieTitle={movie.title} />
           </div>
 
-          <div className="flex justify-center w-full mb-4">
-            <AdsterraButton />
-          </div>
-
-          <div className="w-full aspect-video rounded-xl overflow-hidden shadow-2xl bg-gray-900 border border-gray-800">
-            <iframe 
-              src={`https://vcdn.me/embed/${movie.id}`} 
-              className="w-full h-full border-0" 
-              allowFullScreen 
-            />
+          <div className="w-full aspect-video rounded-xl overflow-hidden my-6 shadow-2xl bg-gray-900 border border-gray-800">
+            {movie.youtube_key ? (
+              <iframe 
+                src={`https://www.youtube.com/embed/${movie.youtube_key}`} 
+                className="w-full h-full border-0" 
+                allowFullScreen 
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-gray-400">
+                Трейлер к этому фильму временно недоступен
+              </div>
+            )}
           </div>
           
           <div className="flex justify-center mt-6">
