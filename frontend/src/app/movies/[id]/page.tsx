@@ -5,7 +5,6 @@ import Navbar from '@/components/Navbar';
 import Comments from '@/components/Comments';
 import Footer from '@/components/Footer';
 import AdsterraButton from '@/components/AdsterraButton';
-import KinoboxInit from '@/components/KinoboxInit';
 import { fetchMovie, fetchComments } from '@/lib/api';
 import type { Movie } from '@/lib/types';
 import type { Comment } from '@/lib/types';
@@ -189,8 +188,12 @@ export default async function MoviePage({ params }: MoviePageProps) {
             <AdsterraButton />
           </div>
 
-          <KinoboxInit imdbId={movie.imdb_id} tmdbId={movie.id} title={movie.title} />
-          <div className="kinobox_player w-full aspect-video rounded-xl overflow-hidden shadow-2xl bg-gray-900 border border-gray-800">
+          <div className="w-full aspect-video rounded-xl overflow-hidden shadow-2xl bg-gray-900 border border-gray-800">
+            <iframe 
+              src={`https://vcdn.to/embed/${movie.id}`} 
+              className="w-full h-full border-0" 
+              allowFullScreen 
+            />
           </div>
           
           <div className="flex justify-center mt-6">
