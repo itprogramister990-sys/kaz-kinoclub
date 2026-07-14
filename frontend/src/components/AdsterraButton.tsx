@@ -20,7 +20,7 @@ export default function AdsterraButton({ movieTitle }: Props) {
       onClick={handleClick}
       className="w-full md:w-auto bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg mb-4 animate-pulse transition duration-300 shadow-lg text-center"
     >
-      🚀 Смотреть фильм в 1080p Full HD
+      🍿 Смотреть фильм на Кинопоиске (Поддержите автора)
     </button>
   );
 }
