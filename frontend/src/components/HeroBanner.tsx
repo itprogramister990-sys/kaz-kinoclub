@@ -15,7 +15,9 @@ export default function HeroBanner({ movie }: HeroBannerProps) {
           src={movie.poster_url}
           alt={`Фоновое изображение: ${movie.title}`}
           fill
-          priority
+          priority={true}
+          loading="eager"
+          unoptimized={true}
           className="object-cover object-top scale-105"
           sizes="100vw"
         />

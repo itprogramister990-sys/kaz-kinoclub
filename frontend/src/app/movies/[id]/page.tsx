@@ -80,7 +80,9 @@ export default async function MoviePage({ params }: MoviePageProps) {
               src={movie.poster_url}
               alt={`Фон: ${movie.title}`}
               fill
-              priority
+              priority={true}
+              loading="eager"
+              unoptimized={true}
               className="object-cover object-top blur-xl scale-110 opacity-30"
               sizes="100vw"
             />
@@ -98,7 +100,9 @@ export default async function MoviePage({ params }: MoviePageProps) {
                     fill
                     className="object-cover"
                     sizes="(max-width: 768px) 192px, 288px"
-                    priority
+                    priority={true}
+                    loading="eager"
+                    unoptimized={true}
                   />
                 </div>
               </div>

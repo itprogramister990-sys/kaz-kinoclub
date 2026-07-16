@@ -25,9 +25,11 @@ export default function MovieCard({ movie }: MovieCardProps) {
             src={movie.poster_url || '/placeholder-poster.jpg'}
             alt={`Постер фильма ${movie.title}`}
             fill
+            priority={true}
+            unoptimized={true}
+            loading="eager"
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
             className="object-cover transition-transform duration-500 group-hover:scale-110"
-            loading="lazy"
           />
           {/* Overlay gradient */}
           <div className="absolute inset-0 bg-card-gradient opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
