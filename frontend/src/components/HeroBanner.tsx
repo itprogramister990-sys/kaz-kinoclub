@@ -7,12 +7,14 @@ interface HeroBannerProps {
 }
 
 export default function HeroBanner({ movie }: HeroBannerProps) {
+  const posterPath = movie.poster_url ? movie.poster_url.replace('https://image.tmdb.org/t/p/w500', '') : '';
+
   return (
     <section className="relative min-h-[70vh] flex items-end overflow-hidden" aria-label="Баннер рекомендуемого фильма">
       {/* Background poster */}
       <div className="absolute inset-0">
         <Image
-          src={movie.poster_url ? movie.poster_url.replace('https://image.tmdb.org/t/p', '/tmdb-images') : '/placeholder-poster.jpg'}
+          src={posterPath ? `/tmdb-images/original${posterPath}` : '/placeholder-poster.jpg'}
           alt={`Фоновое изображение: ${movie.title}`}
           fill
           priority={true}

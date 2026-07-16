@@ -16,13 +16,15 @@ export default function MovieCard({ movie }: MovieCardProps) {
       })
     : '';
 
+  const posterPath = movie.poster_url ? movie.poster_url.replace('https://image.tmdb.org/t/p/w500', '') : '';
+
   return (
     <Link href={`/movies/${movie.id}`} className="block group">
       <article className="card h-full cursor-pointer" id={`movie-card-${movie.id}`}>
         {/* Poster */}
         <div className="relative aspect-[2/3] overflow-hidden">
           <Image
-            src={movie.poster_url ? movie.poster_url.replace('https://image.tmdb.org/t/p', '/tmdb-images') : '/placeholder-poster.jpg'}
+            src={posterPath ? `/tmdb-images/w500${posterPath}` : '/placeholder-poster.jpg'}
             alt={`Постер фильма ${movie.title}`}
             fill
             priority={true}
