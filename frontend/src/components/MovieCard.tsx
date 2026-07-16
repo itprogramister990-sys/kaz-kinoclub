@@ -22,11 +22,10 @@ export default function MovieCard({ movie }: MovieCardProps) {
         {/* Poster */}
         <div className="relative aspect-[2/3] overflow-hidden">
           <Image
-            src={movie.poster_url || '/placeholder-poster.jpg'}
+            src={movie.poster_url ? movie.poster_url.replace('https://image.tmdb.org/t/p', '/tmdb-images') : '/placeholder-poster.jpg'}
             alt={`Постер фильма ${movie.title}`}
             fill
             priority={true}
-            unoptimized={true}
             loading="eager"
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
             className="object-cover transition-transform duration-500 group-hover:scale-110"

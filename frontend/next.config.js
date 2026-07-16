@@ -13,6 +13,14 @@ const nextConfig = {
       },
     ],
   },
+  async rewrites() {
+    return [
+      {
+        source: '/tmdb-images/:path*',
+        destination: 'https://image.tmdb.org/t/p/:path*',
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;

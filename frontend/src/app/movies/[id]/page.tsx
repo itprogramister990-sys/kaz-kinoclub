@@ -77,12 +77,11 @@ export default async function MoviePage({ params }: MoviePageProps) {
           {/* Background blur */}
           <div className="absolute inset-0">
             <Image
-              src={movie.poster_url}
+              src={movie.poster_url ? movie.poster_url.replace('https://image.tmdb.org/t/p', '/tmdb-images') : '/placeholder-poster.jpg'}
               alt={`Фон: ${movie.title}`}
               fill
               priority={true}
               loading="eager"
-              unoptimized={true}
               className="object-cover object-top blur-xl scale-110 opacity-30"
               sizes="100vw"
             />
@@ -95,14 +94,13 @@ export default async function MoviePage({ params }: MoviePageProps) {
               <div className="shrink-0 w-48 md:w-64 lg:w-72 mx-auto md:mx-0">
                 <div className="relative aspect-[2/3] rounded-2xl overflow-hidden shadow-2xl border border-white/10">
                   <Image
-                    src={movie.poster_url}
+                    src={movie.poster_url ? movie.poster_url.replace('https://image.tmdb.org/t/p', '/tmdb-images') : '/placeholder-poster.jpg'}
                     alt={`Постер: ${movie.title}`}
                     fill
                     className="object-cover"
                     sizes="(max-width: 768px) 192px, 288px"
                     priority={true}
                     loading="eager"
-                    unoptimized={true}
                   />
                 </div>
               </div>

@@ -12,12 +12,11 @@ export default function HeroBanner({ movie }: HeroBannerProps) {
       {/* Background poster */}
       <div className="absolute inset-0">
         <Image
-          src={movie.poster_url}
+          src={movie.poster_url ? movie.poster_url.replace('https://image.tmdb.org/t/p', '/tmdb-images') : '/placeholder-poster.jpg'}
           alt={`Фоновое изображение: ${movie.title}`}
           fill
           priority={true}
           loading="eager"
-          unoptimized={true}
           className="object-cover object-top scale-105"
           sizes="100vw"
         />
