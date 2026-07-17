@@ -1,5 +1,4 @@
 import { notFound } from 'next/navigation';
-import Image from 'next/image';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Comments from '@/components/Comments';
@@ -67,8 +66,6 @@ export default async function MoviePage({ params }: MoviePageProps) {
   // after the catch block (which either returns or calls notFound).
   if (!movie) return notFound();
 
-  const posterPath = movie.poster_url ? movie.poster_url.replace('https://image.tmdb.org/t/p/w500', '') : '';
-
   return (
     <>
       <Navbar />
@@ -78,14 +75,11 @@ export default async function MoviePage({ params }: MoviePageProps) {
         <section className="relative min-h-[55vh] flex items-end overflow-hidden" aria-label="Информация о фильме">
           {/* Background blur */}
           <div className="absolute inset-0">
-            <Image
-              src={posterPath ? `/tmdb-images/original${posterPath}` : '/placeholder-poster.jpg'}
+            <img
+              src={movie.poster_url || '/placeholder-poster.jpg'}
               alt={`Фон: ${movie.title}`}
-              fill
-              priority={true}
-              loading="eager"
-              className="object-cover object-top blur-xl scale-110 opacity-30"
-              sizes="100vw"
+              crossOrigin="anonymous"
+              className="w-full h-full object-cover object-top blur-xl scale-110 opacity-30"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d1a] via-[#0d0d1a]/80 to-black/50" />
           </div>
@@ -95,14 +89,11 @@ export default async function MoviePage({ params }: MoviePageProps) {
               {/* Poster */}
               <div className="shrink-0 w-48 md:w-64 lg:w-72 mx-auto md:mx-0">
                 <div className="relative aspect-[2/3] rounded-2xl overflow-hidden shadow-2xl border border-white/10">
-                  <Image
-                    src={posterPath ? `/tmdb-images/w500${posterPath}` : '/placeholder-poster.jpg'}
+                  <img
+                    src={movie.poster_url || '/placeholder-poster.jpg'}
                     alt={`Постер: ${movie.title}`}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 192px, 288px"
-                    priority={true}
-                    loading="eager"
+                    crossOrigin="anonymous"
+                    className="w-full h-full object-cover"
                   />
                 </div>
               </div>

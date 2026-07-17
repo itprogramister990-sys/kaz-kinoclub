@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import { Movie } from '@/lib/types';
 
 interface HeroBannerProps {
@@ -7,20 +6,15 @@ interface HeroBannerProps {
 }
 
 export default function HeroBanner({ movie }: HeroBannerProps) {
-  const posterPath = movie.poster_url ? movie.poster_url.replace('https://image.tmdb.org/t/p/w500', '') : '';
-
   return (
     <section className="relative min-h-[70vh] flex items-end overflow-hidden" aria-label="Баннер рекомендуемого фильма">
       {/* Background poster */}
       <div className="absolute inset-0">
-        <Image
-          src={posterPath ? `/tmdb-images/original${posterPath}` : '/placeholder-poster.jpg'}
+        <img
+          src={movie.poster_url || '/placeholder-poster.jpg'}
           alt={`Фоновое изображение: ${movie.title}`}
-          fill
-          priority={true}
-          loading="eager"
-          className="object-cover object-top scale-105"
-          sizes="100vw"
+          crossOrigin="anonymous"
+          className="w-full h-full object-cover object-top scale-105"
         />
         {/* Multi-layer gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/60 to-transparent" />

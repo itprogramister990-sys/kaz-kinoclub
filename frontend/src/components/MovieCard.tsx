@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import { Movie } from '@/lib/types';
 
 interface MovieCardProps {
@@ -16,21 +15,16 @@ export default function MovieCard({ movie }: MovieCardProps) {
       })
     : '';
 
-  const posterPath = movie.poster_url ? movie.poster_url.replace('https://image.tmdb.org/t/p/w500', '') : '';
-
   return (
     <Link href={`/movies/${movie.id}`} className="block group">
       <article className="card h-full cursor-pointer" id={`movie-card-${movie.id}`}>
         {/* Poster */}
         <div className="relative aspect-[2/3] overflow-hidden">
-          <Image
-            src={posterPath ? `/tmdb-images/w500${posterPath}` : '/placeholder-poster.jpg'}
+          <img
+            src={movie.poster_url || '/placeholder-poster.jpg'}
             alt={`Постер фильма ${movie.title}`}
-            fill
-            priority={true}
-            loading="eager"
-            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
-            className="object-cover transition-transform duration-500 group-hover:scale-110"
+            crossOrigin="anonymous"
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
           />
           {/* Overlay gradient */}
           <div className="absolute inset-0 bg-card-gradient opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
