@@ -23,9 +23,16 @@ const GENRE_TITLES: Record<string, string> = {
   'cartoon': 'Мультфильмы'
 };
 
+// 1. Возвращаем реальные жанры, чтобы компилятор создал для них файлы
 export async function generateStaticParams() {
-  return [];
+  return Object.keys(slugMap).map((slug) => ({
+    name: slug,
+  }));
 }
+
+// 2. Строго запрещаем попытки динамического рендера
+export const dynamicParams = false;
+export const dynamic = 'force-static';
 
 export async function generateMetadata({ params }: { params: { name: string } }): Promise<Metadata> {
   const genreTitle = GENRE_TITLES[params.name] || 'Фильмы';
@@ -34,8 +41,6 @@ export async function generateMetadata({ params }: { params: { name: string } })
     description: `Лучшие ${genreTitle.toLowerCase()} на сайте КиноКлуб Казахстан.`,
   };
 }
-
-export const revalidate = 43200;
 
 export default async function GenrePage({ params }: { params: { name: string } }) {
   const genreSlug = params.name;
@@ -46,7 +51,6 @@ export default async function GenrePage({ params }: { params: { name: string } }
 
   try {
     const russianGenre = slugMap[genreSlug] || genreSlug;
-    // Используем fetchMovies, который сам подставляет url и кеш no-store
     const data = await fetchMovies('', russianGenre, 1);
     movies = data.movies || [];
   } catch (err: any) {
@@ -69,8 +73,8 @@ export default async function GenrePage({ params }: { params: { name: string } }
             <div className="text-center py-20">
               <h2 className="text-xl font-semibold text-white mb-2">Ошибка загрузки</h2>
               <p className="text-white/50 mb-6">{error}</p>
-              <a 
-                href={`/genre/${genreSlug}`} 
+              <a
+                href={`/genre/${genreSlug}`}
                 className="inline-block bg-white/10 hover:bg-white/20 transition-colors px-6 py-2 rounded-lg text-white"
               >
                 Обновить страницу
