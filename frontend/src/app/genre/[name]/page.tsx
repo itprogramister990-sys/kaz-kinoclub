@@ -23,6 +23,10 @@ const GENRE_TITLES: Record<string, string> = {
   'cartoon': 'Мультфильмы'
 };
 
+export async function generateStaticParams() {
+  return [];
+}
+
 export async function generateMetadata({ params }: { params: { name: string } }): Promise<Metadata> {
   const genreTitle = GENRE_TITLES[params.name] || 'Фильмы';
   return {

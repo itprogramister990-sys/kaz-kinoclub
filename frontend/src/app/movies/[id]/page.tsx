@@ -13,6 +13,10 @@ interface MoviePageProps {
   params: { id: string };
 }
 
+export async function generateStaticParams() {
+  return [];
+}
+
 export async function generateMetadata({ params }: MoviePageProps): Promise<Metadata> {
   try {
     const movie = await fetchMovie(params.id);
