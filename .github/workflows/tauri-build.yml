@@ -10,6 +10,11 @@ permissions:
 
 jobs:
   release:
+    env:
+      NEXT_PUBLIC_API_URL: "https://kaz-kinoclub-backend.onrender.com"
+      NEXT_PUBLIC_SUPABASE_URL: "https://ldzuxpwgnihvnfvqjsgb.supabase.co"
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: "sb_publishable_kPkp0yQToDTyxpqxdHzFug_Al5vVM7n"
+      NEXT_PUBLIC_TURNSTILE_SITE_KEY: "0x4AAAAAAD4lSiu1zQOrF5eZ"
     strategy:
       fail-fast: false
       matrix:
