@@ -14,10 +14,6 @@ pub fn run() {
         )?;
       }
       
-      // Принудительно открываем DevTools при старте
-      let window = app.get_webview_window("main").unwrap();
-      window.open_devtools();
-      
       Ok(())
     })
     .run(tauri::generate_context!())
