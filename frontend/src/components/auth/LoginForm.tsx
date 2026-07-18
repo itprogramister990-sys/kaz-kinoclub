@@ -6,12 +6,14 @@ import { useRouter } from 'next/navigation';
 import { PasswordInput } from './PasswordInput';
 import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
+import { Turnstile } from '@marsidev/react-turnstile';
 
 export function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -19,6 +21,12 @@ export function LoginForm() {
     setError('');
 
     setIsLoading(true);
+
+    if (!turnstileToken) {
+      setError('Пожалуйста, подтвердите, что вы не робот');
+      setIsLoading(false);
+      return;
+    }
 
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -98,6 +106,16 @@ export function LoginForm() {
             {error}
           </div>
         )}
+
+        <div className="flex justify-center w-full my-4">
+          <Turnstile 
+            siteKey="0x4AAAAAAAi8B6i-1PZ0h8xR" 
+            onSuccess={(token) => setTurnstileToken(token)}
+            options={{
+              theme: 'dark'
+            }}
+          />
+        </div>
 
         <button
           type="submit"
