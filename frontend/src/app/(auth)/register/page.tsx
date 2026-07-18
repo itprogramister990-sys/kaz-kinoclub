@@ -19,46 +19,8 @@ export default function RegisterPage() {
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
-
-    if (!turnstileToken) {
-      setError("Пожалуйста, пройдите проверку на бота");
-      return;
-    }
-
-    if (password.length < 6) {
-      setError("Пароль должен содержать минимум 6 символов");
-      return;
-    }
-
-    setIsLoading(true);
-
-    try {
-      const res = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name,
-          email,
-          password,
-          turnstileToken,
-        }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.message || "Ошибка при регистрации");
-      }
-
-      setIsSuccess(true);
-    } catch (err: any) {
-      setError(err.message || "Произошла ошибка при регистрации");
-    } finally {
-      setIsLoading(false);
-    }
+    setError("Модуль регистрации временно недоступен. Ведутся технические работы.");
+    return;
   };
 
   if (isSuccess) {
@@ -151,13 +113,18 @@ export default function RegisterPage() {
             </div>
           )}
 
-          <button
-            type="submit"
-            disabled={isLoading || !turnstileToken}
-            className="w-full py-3 flex justify-center items-center rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-semibold shadow-lg shadow-purple-500/25 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 disabled:cursor-not-allowed"
-          >
-            {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Зарегистрироваться"}
-          </button>
+          <div className="relative">
+            <div className="absolute -top-3 -right-2 z-20 px-2 py-1 text-xs font-bold uppercase tracking-wider text-white bg-amber-500/80 backdrop-blur-md rounded-lg shadow-lg border border-amber-400/50 transform rotate-12">
+              В разработке 🛠
+            </div>
+            <button
+              type="button"
+              onClick={(e) => handleRegister(e as any)}
+              className="w-full py-3 flex justify-center items-center rounded-xl bg-gradient-to-r from-purple-600/50 to-indigo-600/50 text-white font-semibold shadow-lg shadow-purple-500/10 transition-all opacity-70 cursor-not-allowed border border-purple-500/30"
+            >
+              Зарегистрироваться
+            </button>
+          </div>
         </form>
 
         <p className="text-center text-sm text-slate-400">
