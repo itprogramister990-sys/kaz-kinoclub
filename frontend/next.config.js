@@ -4,8 +4,8 @@ const isTauri = process.env.IS_TAURI === 'true';
 const nextConfig = {
   output: isTauri ? 'export' : undefined,
   trailingSlash: true,
-  eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: true },
+  turbopack: {},
   images: {
     unoptimized: true,
     remotePatterns: [
