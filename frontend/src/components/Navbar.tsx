@@ -151,6 +151,10 @@ export default function Navbar() {
                         <button onClick={openSettingsModal} className="text-left px-4 py-2 text-sm text-slate-300 hover:bg-slate-800 hover:text-white transition-colors w-full">
                           Параметры
                         </button>
+                        <Link href="/device" onClick={() => setDropdownOpen(false)} className="text-left px-4 py-2 text-sm text-purple-400 hover:bg-slate-800 hover:text-purple-300 transition-colors w-full flex items-center justify-between">
+                          <span>Подключить ТВ</span>
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                        </Link>
                         <button
                           onClick={handleSignOut}
                           className="text-left px-4 py-2 text-sm text-red-400 hover:bg-slate-800 hover:text-red-300 transition-colors mt-1 border-t border-slate-800/50 pt-3 w-full"
