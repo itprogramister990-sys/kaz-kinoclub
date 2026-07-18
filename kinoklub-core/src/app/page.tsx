@@ -1,9 +1,6 @@
-import { Header } from "@/components/Header";
-
 export default function Home() {
   return (
     <main className="min-h-screen pt-20">
-      <Header />
       
       <section className="container mx-auto px-4 flex flex-col items-center justify-center min-h-[80vh] text-center">
         <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6">

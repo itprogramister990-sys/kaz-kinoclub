@@ -32,7 +32,7 @@ export function Header() {
           {!session ? (
             <button
               onClick={() => setAuthModalOpen(true)}
-              className="px-6 py-2 rounded-full bg-blue-600 hover:bg-blue-500 text-white font-medium transition-all shadow-[0_0_15px_rgba(37,99,235,0.5)] hover:scale-105"
+              className="px-6 py-2 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:scale-105 shadow-lg text-white font-medium transition-all"
             >
               Войти
             </button>
