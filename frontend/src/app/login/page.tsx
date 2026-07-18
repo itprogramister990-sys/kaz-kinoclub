@@ -1,4 +1,4 @@
-import { LoginForm } from '@/components/auth/LoginForm';
+import { LoginTabs } from '@/components/auth/LoginTabs';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
@@ -13,7 +13,7 @@ export default function LoginPage() {
         </div>
         
         <div className="relative z-10 w-full flex justify-center">
-          <LoginForm />
+          <LoginTabs />
         </div>
       </main>
       <Footer />
