@@ -12,24 +12,17 @@ export default function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [session, setSession] = useState<Session | null>(null);
-  const [loadingSession, setLoadingSession] = useState(true);
+  const [loadingSession, setLoadingSession] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
-    // Fallback timeout for Smart TVs (forces skeleton to disappear if Supabase hangs)
-    const timeoutId = setTimeout(() => {
-      setLoadingSession(false);
-    }, 2000);
-
     // Initial check
     supabase.auth.getSession()
       .then(({ data: { session } }) => {
         setSession(session);
-        setLoadingSession(false);
       })
       .catch((err) => {
         console.error("Auth session error:", err);
-        setLoadingSession(false);
       });
 
     // Listen for changes
@@ -40,7 +33,6 @@ export default function Navbar() {
     });
 
     return () => {
-      clearTimeout(timeoutId);
       subscription.unsubscribe();
     };
   }, []);
