@@ -30,6 +30,7 @@ jobs:
         working-directory: ./frontend
         env:
           IS_TAURI: 'true'
+          NEXT_PUBLIC_API_URL: 'https://kaz-kinoclub-backend.onrender.com'
         run: npx @tauri-apps/cli build
 
       - name: Upload Artifact
