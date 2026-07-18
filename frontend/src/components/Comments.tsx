@@ -84,18 +84,26 @@ export default function Comments({ movieId, initialComments }: CommentsProps) {
     try {
       const authorName = session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || 'Аноним';
 
-      const { data: newComment, error: insertError } = await supabase
+      const { data: newDbComment, error: insertError } = await supabase
         .from('comments')
         .insert({
-          user_name: authorName,
           user_id: session.user.id,
-          movie_id: movieId,
-          text: text.trim(),
+          movie_id: String(movieId),
+          content: text.trim(),
         })
         .select()
         .single();
 
       if (insertError) throw insertError;
+
+      // Мапим ответ БД на формат, который ожидает фронтенд
+      const newComment: Comment = {
+        id: newDbComment.id,
+        user_name: authorName, // БД не хранит имя, используем локальное
+        text: newDbComment.content,
+        created_at: newDbComment.created_at,
+        movie_id: movieId,
+      };
 
       setComments((prev) => [newComment, ...prev]);
       setText('');
