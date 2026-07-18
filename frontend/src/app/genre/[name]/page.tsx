@@ -33,10 +33,7 @@ export async function generateMetadata({ params }: { params: { name: string } })
   };
 }
 
-export default async function GenrePage({ params }: { params: { name: string } }) {
-  const genreSlug = params.name;
-  const genreTitle = GENRE_TITLES[genreSlug] || 'Фильмы';
-
+async function GenreContent({ genreSlug, genreTitle }: { genreSlug: string, genreTitle: string }) {
   let movies: Movie[] = [];
   let error = '';
 
@@ -50,32 +47,66 @@ export default async function GenrePage({ params }: { params: { name: string } }
   }
 
   return (
+    <main className="pt-24 pb-12 px-4 min-h-screen">
+      <div className="max-w-7xl mx-auto">
+        <div className="mb-2">
+          <h1 className="font-display font-black text-3xl md:text-4xl text-white">
+            {genreTitle}
+          </h1>
+        </div>
+
+        {error ? (
+          <div className="text-center py-20">
+            <h2 className="text-xl font-semibold text-white mb-2">Ошибка загрузки</h2>
+            <p className="text-white/50 mb-6">{error}</p>
+            <a
+              href={`/genre/${genreSlug}`}
+              className="inline-block bg-white/10 hover:bg-white/20 transition-colors px-6 py-2 rounded-lg text-white"
+            >
+              Обновить страницу
+            </a>
+          </div>
+        ) : (
+          <GenreMovieGrid initialMovies={movies} genreSlug={genreSlug} />
+        )}
+      </div>
+    </main>
+  );
+}
+
+function GenreSkeleton() {
+  return (
+    <main className="pt-24 pb-12 px-4 min-h-screen">
+      <div className="max-w-7xl mx-auto">
+        <div className="mb-8">
+          <div className="h-10 w-48 bg-slate-800/50 rounded-lg animate-pulse" />
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-6">
+          {Array.from({ length: 12 }).map((_, i) => (
+            <div key={i} className="flex flex-col gap-2">
+              <div className="aspect-[2/3] w-full bg-slate-800/50 rounded-xl animate-pulse" />
+              <div className="h-4 w-3/4 bg-slate-800/50 rounded animate-pulse mt-1" />
+              <div className="h-3 w-1/2 bg-slate-800/30 rounded animate-pulse" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </main>
+  );
+}
+
+import { Suspense } from 'react';
+
+export default function GenrePage({ params }: { params: { name: string } }) {
+  const genreSlug = params.name;
+  const genreTitle = GENRE_TITLES[genreSlug] || 'Фильмы';
+
+  return (
     <>
       <Navbar />
-      <main className="pt-24 pb-12 px-4 min-h-screen">
-        <div className="max-w-7xl mx-auto">
-          <div className="mb-2">
-            <h1 className="font-display font-black text-3xl md:text-4xl text-white">
-              {genreTitle}
-            </h1>
-          </div>
-
-          {error ? (
-            <div className="text-center py-20">
-              <h2 className="text-xl font-semibold text-white mb-2">Ошибка загрузки</h2>
-              <p className="text-white/50 mb-6">{error}</p>
-              <a
-                href={`/genre/${genreSlug}`}
-                className="inline-block bg-white/10 hover:bg-white/20 transition-colors px-6 py-2 rounded-lg text-white"
-              >
-                Обновить страницу
-              </a>
-            </div>
-          ) : (
-            <GenreMovieGrid initialMovies={movies} genreSlug={genreSlug} />
-          )}
-        </div>
-      </main>
+      <Suspense fallback={<GenreSkeleton />}>
+        <GenreContent genreSlug={genreSlug} genreTitle={genreTitle} />
+      </Suspense>
       <Footer />
     </>
   );
