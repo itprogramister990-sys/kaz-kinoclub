@@ -6,8 +6,8 @@ import Navbar from '@/components/Navbar';
 import Comments from '@/components/Comments';
 import Footer from '@/components/Footer';
 import AdsterraButton from '@/components/AdsterraButton';
-import { fetchMovie, fetchComments } from '@/lib/api';
-import type { Movie, Comment } from '@/lib/types';
+import { fetchMovie } from '@/lib/api';
+import type { Movie } from '@/lib/types';
 
 function MovieContent() {
   const searchParams = useSearchParams();
@@ -15,7 +15,6 @@ function MovieContent() {
   const id = searchParams.get('id');
 
   const [movie, setMovie] = useState<Movie | null>(null);
-  const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -29,13 +28,6 @@ function MovieContent() {
         setLoading(true);
         const movieData = await fetchMovie(id!);
         if (isMounted) setMovie(movieData);
-        
-        try {
-          const commentsData = await fetchComments(id!);
-          if (isMounted) setComments(commentsData.comments || []);
-        } catch (e) {
-          // ignore comments error
-        }
       } catch (err: any) {
         if (isMounted) setError(err.message || 'Не удалось загрузить фильм');
       } finally {
@@ -183,7 +175,7 @@ function MovieContent() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                       d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                   </svg>
-                  Комментарии ({comments.length})
+                  Комментарии
                 </a>
               </div>
             </div>
@@ -215,7 +207,7 @@ function MovieContent() {
 
       {/* ─── Comments ───────────────────────────────────────────────── */}
       <section id="comments-section" className="max-w-3xl mx-auto px-4 sm:px-6 pb-16">
-        <Comments movieId={movie.id} initialComments={comments} />
+        <Comments movieId={movie.id} />
       </section>
     </main>
   );

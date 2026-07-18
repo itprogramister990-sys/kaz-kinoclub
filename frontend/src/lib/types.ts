@@ -15,11 +15,13 @@ export interface Movie {
 }
 
 export interface Comment {
-  id: number;
-  user_name: string;
+  id: string;
+  user_name?: string;
   text: string;
   created_at: string;
-  movie_id?: number;
+  movie_id?: number | string;
+  user_id?: string;
+  parent_id?: string | null;
 }
 
 export interface MoviesResponse {
