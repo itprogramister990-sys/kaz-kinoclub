@@ -55,8 +55,7 @@ export function RegisterForm() {
           setError('Этот email уже зарегистрирован. Попробуйте войти или восстановить пароль');
         } else if (data.session) {
           // If auto-confirm is enabled, session will be returned immediately
-          router.push('/');
-          router.refresh();
+          window.location.href = '/';
         } else {
           // Email confirmation required
           setIsEmailSent(true);

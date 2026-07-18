@@ -33,8 +33,8 @@ export function LoginForm() {
           setError(error.message);
         }
       } else {
-        router.push('/');
-        router.refresh();
+        // Use hard redirect for Smart TV compatibility (forces fresh state)
+        window.location.href = '/';
       }
     } catch (err: any) {
       setError('Произошла ошибка при входе');
