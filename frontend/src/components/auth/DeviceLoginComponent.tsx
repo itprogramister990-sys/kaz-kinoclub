@@ -15,7 +15,17 @@ export function DeviceLoginComponent() {
     setErrorMsg('');
     
     // 1. Generate unique device ID and a 6-digit code
-    const newDeviceId = crypto.randomUUID();
+    // Fallback for older TV browsers that do not support crypto.randomUUID
+    const generateId = () => {
+      try {
+        if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+          return crypto.randomUUID();
+        }
+      } catch (e) {}
+      return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    };
+
+    const newDeviceId = generateId();
     const newCode = Math.floor(100000 + Math.random() * 900000).toString(); // 6 digits
 
     setDeviceId(newDeviceId);
