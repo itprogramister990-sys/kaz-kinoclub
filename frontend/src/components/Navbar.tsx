@@ -4,6 +4,7 @@ import Link from 'next/link';
 import SearchBar from './SearchBar';
 import { supabase } from '@/lib/supabaseClient';
 import type { Session } from '@supabase/supabase-js';
+import { usePathname } from 'next/navigation';
 import { SettingsModal } from './SettingsModal';
 
 export default function Navbar() {
@@ -12,6 +13,7 @@ export default function Navbar() {
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [session, setSession] = useState<Session | null>(null);
   const [loadingSession, setLoadingSession] = useState(true);
+  const pathname = usePathname();
 
   useEffect(() => {
     // Fallback timeout for Smart TVs (forces skeleton to disappear if Supabase hangs)
@@ -52,6 +54,8 @@ export default function Navbar() {
     setDropdownOpen(false);
     setIsSettingsModalOpen(true);
   };
+
+  const isHomePage = pathname === '/';
 
   return (
     <>
@@ -107,13 +111,15 @@ export default function Navbar() {
               </Link>
             </div>
 
-            <div className="flex items-center gap-4 w-full lg:w-auto flex-1 lg:flex-none lg:min-w-[300px] shrink-0 order-last lg:order-none">
+            <div className="flex items-center gap-4 w-full lg:w-auto flex-1 lg:flex-none lg:min-w-[200px] shrink-0 order-last lg:order-none">
               {/* SearchBar */}
-              <div className="flex-1 lg:flex-none">
-                <Suspense fallback={<div className="h-10 animate-pulse bg-white/5 rounded-lg w-full"></div>}>
-                  <SearchBar />
-                </Suspense>
-              </div>
+              {!isHomePage && (
+                <div className="flex-1 lg:flex-none">
+                  <Suspense fallback={<div className="h-10 animate-pulse bg-white/5 rounded-lg w-full"></div>}>
+                    <SearchBar />
+                  </Suspense>
+                </div>
+              )}
               
               {/* Auth Section */}
               <div>
