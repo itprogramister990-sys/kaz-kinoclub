@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   description: 'Лучшие фильмы по версии сообщества и TMDB.',
 };
 
-export const revalidate = 43200;
+export const dynamic = 'force-dynamic';
 
 export default async function TopMoviesPage() {
   let movies: Movie[] = [];
