@@ -17,7 +17,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: '20'
 
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
@@ -29,7 +29,7 @@ jobs:
       - name: Build Tauri App
         working-directory: ./frontend
         env:
-          TAURI_BUILD: "true"
+          IS_TAURI: 'true'
         run: npx @tauri-apps/cli build
 
       - name: Upload Artifact
