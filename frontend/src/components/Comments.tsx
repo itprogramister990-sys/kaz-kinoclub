@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { Comment } from '@/lib/types';
-import { postComment } from '@/lib/api';
 import { supabase } from '@/lib/supabaseClient';
 import type { Session } from '@supabase/supabase-js';
 import Link from 'next/link';
@@ -46,7 +45,7 @@ function getAvatarColor(name: string) {
 
 export default function Comments({ movieId, initialComments }: CommentsProps) {
   const [comments, setComments] = useState<Comment[]>(initialComments);
-  const [userName, setUserName] = useState('');
+  const [comments, setComments] = useState<Comment[]>(initialComments);
   const [text, setText] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -56,18 +55,12 @@ export default function Comments({ movieId, initialComments }: CommentsProps) {
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
-      if (session?.user?.user_metadata?.full_name) {
-        setUserName(session.user.user_metadata.full_name);
-      }
     });
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
-      if (session?.user?.user_metadata?.full_name) {
-        setUserName(session.user.user_metadata.full_name);
-      }
     });
 
     return () => subscription.unsubscribe();
@@ -78,8 +71,8 @@ export default function Comments({ movieId, initialComments }: CommentsProps) {
     setError('');
     setSuccess(false);
 
-    if (!userName.trim() || !text.trim()) {
-      setError('Заполните все поля');
+    if (!session) {
+      setError('Необходима авторизация');
       return;
     }
 
@@ -90,11 +83,20 @@ export default function Comments({ movieId, initialComments }: CommentsProps) {
 
     setSubmitting(true);
     try {
-      const newComment = await postComment({
-        user_name: userName.trim(),
-        movie_id: movieId,
-        text: text.trim(),
-      });
+      const authorName = session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || 'Аноним';
+
+      const { data: newComment, error: insertError } = await supabase
+        .from('comments')
+        .insert({
+          user_name: authorName,
+          user_id: session.user.id,
+          movie_id: movieId,
+          text: text.trim(),
+        })
+        .select()
+        .single();
+
+      if (insertError) throw insertError;
 
       setComments((prev) => [newComment, ...prev]);
       setText('');
@@ -120,22 +122,6 @@ export default function Comments({ movieId, initialComments }: CommentsProps) {
         <div className="glass rounded-2xl p-6 mb-8 animate-slide-up">
           <h3 className="text-white/80 font-semibold mb-4">Оставить отзыв</h3>
           <form onSubmit={handleSubmit} id="comment-form" className="space-y-4">
-            <div>
-              <label htmlFor="comment-name" className="block text-white/60 text-sm mb-1.5">
-                Ваше имя
-              </label>
-              <input
-                id="comment-name"
-                type="text"
-                value={userName}
-                onChange={(e) => setUserName(e.target.value)}
-                placeholder="Например: Айгерим"
-                maxLength={100}
-                className="input-field"
-                disabled={submitting}
-              />
-            </div>
-
             <div>
               <label htmlFor="comment-text" className="block text-white/60 text-sm mb-1.5">
                 Ваш отзыв
