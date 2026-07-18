@@ -12,10 +12,12 @@ pub fn run() {
             .level(log::LevelFilter::Info)
             .build(),
         )?;
-        // Автоматически открываем DevTools при старте (в режиме dev)
-        let window = app.get_webview_window("main").unwrap();
-        window.open_devtools();
       }
+      
+      // Принудительно открываем DevTools при старте
+      let window = app.get_webview_window("main").unwrap();
+      window.open_devtools();
+      
       Ok(())
     })
     .run(tauri::generate_context!())

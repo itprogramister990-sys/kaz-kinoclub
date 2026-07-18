@@ -14,7 +14,21 @@ interface MoviePageProps {
 }
 
 export async function generateStaticParams() {
-  return [{ id: '1' }];
+  try {
+    const data = await fetchMovies('', '', 1, '');
+    const pages = data.total_pages || 1;
+    let allIds: { id: string }[] = data.movies.map((m: Movie) => ({ id: m.id.toString() }));
+    
+    // Fetch remaining pages if any (limit to 10 to avoid too many requests)
+    for (let i = 2; i <= Math.min(pages, 10); i++) {
+      const pageData = await fetchMovies('', '', i, '');
+      allIds = allIds.concat(pageData.movies.map((m: Movie) => ({ id: m.id.toString() })));
+    }
+    return allIds;
+  } catch (err) {
+    console.error('Failed to generate static params', err);
+    return [{ id: '1' }]; // Fallback
+  }
 }
 
 export async function generateMetadata({ params }: MoviePageProps): Promise<Metadata> {

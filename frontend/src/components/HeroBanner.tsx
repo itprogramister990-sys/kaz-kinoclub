@@ -1,4 +1,6 @@
-import Link from 'next/link';
+'use client';
+
+import { useRouter } from 'next/navigation';
 import { Movie } from '@/lib/types';
 
 interface HeroBannerProps {
@@ -6,6 +8,13 @@ interface HeroBannerProps {
 }
 
 export default function HeroBanner({ movie }: HeroBannerProps) {
+  const router = useRouter();
+
+  const handleNav = (e: React.MouseEvent, href: string) => {
+    e.preventDefault();
+    router.push(href);
+  };
+
   return (
     <section className="relative min-h-[70vh] flex items-end overflow-hidden" aria-label="Баннер рекомендуемого фильма">
       {/* Background poster */}
@@ -51,8 +60,9 @@ export default function HeroBanner({ movie }: HeroBannerProps) {
 
           {/* CTA Buttons */}
           <div className="flex flex-wrap gap-4">
-            <Link
+            <a
               href={`/movies/${movie.id}`}
+              onClick={(e) => handleNav(e, `/movies/${movie.id}`)}
               id="hero-watch-btn"
               className="btn-primary text-base px-8 py-3.5"
             >
@@ -60,9 +70,10 @@ export default function HeroBanner({ movie }: HeroBannerProps) {
                 <path d="M8 5v14l11-7z" />
               </svg>
               Смотреть онлайн
-            </Link>
-            <Link
+            </a>
+            <a
               href={`/movies/${movie.id}`}
+              onClick={(e) => handleNav(e, `/movies/${movie.id}`)}
               className="btn-secondary text-base px-8 py-3.5"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -70,7 +81,7 @@ export default function HeroBanner({ movie }: HeroBannerProps) {
                   d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               Подробнее
-            </Link>
+            </a>
           </div>
         </div>
       </div>

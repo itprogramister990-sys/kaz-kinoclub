@@ -1,4 +1,6 @@
-import Link from 'next/link';
+'use client';
+
+import { useRouter } from 'next/navigation';
 import { Movie } from '@/lib/types';
 
 interface MovieCardProps {
@@ -6,6 +8,7 @@ interface MovieCardProps {
 }
 
 export default function MovieCard({ movie }: MovieCardProps) {
+  const router = useRouter();
   const isUnreleased = movie.release_date && new Date(movie.release_date) > new Date();
   const formattedDate = movie.release_date 
     ? new Date(movie.release_date).toLocaleDateString('ru-RU', {
@@ -15,8 +18,13 @@ export default function MovieCard({ movie }: MovieCardProps) {
       })
     : '';
 
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    router.push(`/movies/${movie.id}`);
+  };
+
   return (
-    <Link href={`/movies/${movie.id}`} className="block group">
+    <a href={`/movies/${movie.id}`} onClick={handleClick} className="block group">
       <article className="card h-full cursor-pointer" id={`movie-card-${movie.id}`}>
         {/* Poster */}
         <div className="relative aspect-[2/3] overflow-hidden">
@@ -68,6 +76,6 @@ export default function MovieCard({ movie }: MovieCardProps) {
           )}
         </div>
       </article>
-    </Link>
+    </a>
   );
 }
