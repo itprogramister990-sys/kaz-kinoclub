@@ -32,14 +32,20 @@ export function DeviceLoginComponent() {
     setCode(newCode);
 
     try {
-      // 2. Insert into Supabase
-      const { error: insertError } = await supabase
+      // 2. Insert into Supabase with a timeout
+      const insertPromise = supabase
         .from('device_codes')
         .insert({
           device_id: newDeviceId,
           code: newCode,
           status: 'pending'
         });
+
+      const timeoutPromise = new Promise<any>((_, reject) => 
+        setTimeout(() => reject(new Error('Превышено время ожидания сервера')), 8000)
+      );
+
+      const { error: insertError } = await Promise.race([insertPromise, timeoutPromise]);
 
       if (insertError) throw insertError;
 
