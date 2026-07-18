@@ -104,6 +104,15 @@ export function RegisterForm() {
         <p className="text-slate-400">Присоединяйтесь к КиноКлубу</p>
       </div>
 
+      <div className="mb-6 p-4 bg-purple-500/10 border border-purple-500/20 rounded-xl flex gap-3 text-sm text-purple-200">
+        <svg className="w-5 h-5 shrink-0 mt-0.5 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <p>
+          <strong>Внимание:</strong> Если у вас возникла ошибка при регистрации (например, на Smart TV), пожалуйста, зарегистрируйтесь с телефона или компьютера, а затем просто войдите в свой аккаунт на этом устройстве.
+        </p>
+      </div>
+
       <form onSubmit={handleRegister} className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-slate-300 mb-1">Email</label>
