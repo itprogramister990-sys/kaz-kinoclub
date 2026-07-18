@@ -1,10 +1,15 @@
 'use client';
 import { useState, Suspense } from 'react';
+import { useSession, signOut } from 'next-auth/react';
+import { AuthModal } from './AuthModal';
 import Link from 'next/link';
 import SearchBar from './SearchBar';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const { data: session } = useSession();
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
@@ -55,11 +60,61 @@ export default function Navbar() {
             <Link href="/genre/cartoon" className="text-white/80 hover:text-white transition-colors text-sm font-medium">Мультфильмы</Link>
           </div>
 
-          {/* SearchBar */}
-          <div className="w-full lg:w-auto flex-1 lg:flex-none lg:min-w-[300px] shrink-0 order-last lg:order-none">
-            <Suspense fallback={<div className="h-10 animate-pulse bg-white/5 rounded-lg w-full"></div>}>
-              <SearchBar />
-            </Suspense>
+          <div className="flex items-center gap-4 w-full lg:w-auto flex-1 lg:flex-none lg:min-w-[300px] shrink-0 order-last lg:order-none">
+            {/* SearchBar */}
+            <div className="flex-1 lg:flex-none">
+              <Suspense fallback={<div className="h-10 animate-pulse bg-white/5 rounded-lg w-full"></div>}>
+                <SearchBar />
+              </Suspense>
+            </div>
+            
+            {/* Auth Section */}
+            <div>
+              {!session ? (
+                <button
+                  onClick={() => setAuthModalOpen(true)}
+                  className="px-5 py-2 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:scale-105 shadow-lg text-white font-medium transition-all text-sm whitespace-nowrap"
+                >
+                  Войти
+                </button>
+              ) : (
+                <div className="relative">
+                  <button
+                    onClick={() => setDropdownOpen(!dropdownOpen)}
+                    className="w-10 h-10 rounded-full bg-slate-800 border-2 border-slate-700 overflow-hidden flex items-center justify-center hover:border-purple-500 transition-colors"
+                  >
+                    {session.user?.image ? (
+                      <img src={session.user.image} alt="User avatar" className="w-full h-full object-cover" />
+                    ) : (
+                      <span className="text-lg font-bold text-slate-300">
+                        {session.user?.name?.[0]?.toUpperCase() || session.user?.email?.[0]?.toUpperCase() || 'U'}
+                      </span>
+                    )}
+                  </button>
+                  
+                  {dropdownOpen && (
+                    <div className="absolute right-0 mt-2 w-48 rounded-xl bg-slate-900/95 backdrop-blur-xl border border-slate-800 shadow-2xl overflow-hidden py-2 flex flex-col z-50">
+                      <div className="px-4 py-3 border-b border-slate-800 mb-1">
+                        <p className="text-sm font-medium text-white truncate">{session.user?.name || 'Пользователь'}</p>
+                        <p className="text-xs text-slate-400 truncate">{session.user?.email}</p>
+                      </div>
+                      <button className="text-left px-4 py-2 text-sm text-slate-300 hover:bg-slate-800 hover:text-white transition-colors">
+                        Профиль
+                      </button>
+                      <button className="text-left px-4 py-2 text-sm text-slate-300 hover:bg-slate-800 hover:text-white transition-colors">
+                        Параметры
+                      </button>
+                      <button
+                        onClick={() => signOut()}
+                        className="text-left px-4 py-2 text-sm text-red-400 hover:bg-slate-800 hover:text-red-300 transition-colors mt-1 border-t border-slate-800/50 pt-3"
+                      >
+                        Выйти
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
@@ -80,6 +135,7 @@ export default function Navbar() {
             <Link href="/genre/cartoon" onClick={() => setIsOpen(false)} className="text-white/80 hover:text-white transition-colors text-base font-medium">Мультфильмы</Link>
           </div>
         )}
+        {authModalOpen && <AuthModal onClose={() => setAuthModalOpen(false)} />}
       </div>
     </nav>
   );
