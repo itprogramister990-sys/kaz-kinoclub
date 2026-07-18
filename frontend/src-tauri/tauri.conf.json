@@ -20,7 +20,7 @@
       }
     ],
     "security": {
-      "csp": null
+      "csp": "default-src 'self' tauri: asset: http://localhost:3000 ws: wss: https://*.youtube.com https://*.ytimg.com; frame-src 'self' https://*.youtube.com; img-src 'self' data: tauri: asset: http://localhost:3000 https://*.ytimg.com https://*.youtube.com https://image.tmdb.org https://*.kinopoisk.ru https://mc.yandex.ru; script-src 'self' tauri: asset: http://localhost:3000 'unsafe-inline' 'unsafe-eval' https://mc.yandex.ru; style-src 'self' tauri: asset: http://localhost:3000 'unsafe-inline'; connect-src 'self' tauri: asset: http://localhost:3000 ws: wss: https:;"
     }
   },
   "bundle": {
