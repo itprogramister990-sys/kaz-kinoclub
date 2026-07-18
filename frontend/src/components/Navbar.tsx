@@ -58,6 +58,10 @@ export default function Navbar() {
             <Link href="/genre/comedy" className="text-white/80 hover:text-white transition-colors text-sm font-medium">Комедии</Link>
             <Link href="/genre/horror" className="text-white/80 hover:text-white transition-colors text-sm font-medium">Ужасы</Link>
             <Link href="/genre/cartoon" className="text-white/80 hover:text-white transition-colors text-sm font-medium">Мультфильмы</Link>
+            <Link href="/download" className="text-white hover:text-purple-400 transition-colors text-sm font-bold flex items-center gap-1">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+              Приложение
+            </Link>
           </div>
 
           <div className="flex items-center gap-4 w-full lg:w-auto flex-1 lg:flex-none lg:min-w-[300px] shrink-0 order-last lg:order-none">
@@ -133,6 +137,11 @@ export default function Navbar() {
             <Link href="/genre/comedy" onClick={() => setIsOpen(false)} className="text-white/80 hover:text-white transition-colors text-base font-medium">Комедии</Link>
             <Link href="/genre/horror" onClick={() => setIsOpen(false)} className="text-white/80 hover:text-white transition-colors text-base font-medium">Ужасы</Link>
             <Link href="/genre/cartoon" onClick={() => setIsOpen(false)} className="text-white/80 hover:text-white transition-colors text-base font-medium">Мультфильмы</Link>
+            <div className="h-px bg-white/10 w-full my-1"></div>
+            <Link href="/download" onClick={() => setIsOpen(false)} className="text-white hover:text-purple-400 transition-colors text-lg font-bold flex items-center gap-2">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+              Приложение
+            </Link>
           </div>
         )}
         {authModalOpen && <AuthModal onClose={() => setAuthModalOpen(false)} />}
