@@ -58,7 +58,7 @@ export default function SearchBar() {
       if (selectedYears.length > 0) params.append('years', selectedYears.join(','));
 
       const qs = params.toString();
-      router.push(qs ? `/search-results?${qs}` : '/search-results');
+      window.location.href = qs ? `/search-results/?${qs}` : '/search-results/';
       setShowFilters(false);
     });
   };
@@ -67,7 +67,7 @@ export default function SearchBar() {
     setQuery('');
     setSelectedGenres([]);
     setSelectedYears([]);
-    router.push('/search-results');
+    window.location.href = '/search-results/';
   };
 
   return (

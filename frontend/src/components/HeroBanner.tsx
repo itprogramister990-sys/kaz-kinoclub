@@ -61,8 +61,8 @@ export default function HeroBanner({ movie }: HeroBannerProps) {
           {/* CTA Buttons */}
           <div className="flex flex-wrap gap-4">
             <a
-              href={`/movies/${movie.id}`}
-              onClick={(e) => handleNav(e, `/movies/${movie.id}`)}
+              href={`/movie/?id=${movie.id}`}
+              onClick={(e) => handleNav(e, `/movie/?id=${movie.id}`)}
               id="hero-watch-btn"
               className="btn-primary text-base px-8 py-3.5"
             >
@@ -72,8 +72,8 @@ export default function HeroBanner({ movie }: HeroBannerProps) {
               Смотреть онлайн
             </a>
             <a
-              href={`/movies/${movie.id}`}
-              onClick={(e) => handleNav(e, `/movies/${movie.id}`)}
+              href={`/movie/?id=${movie.id}`}
+              onClick={(e) => handleNav(e, `/movie/?id=${movie.id}`)}
               className="btn-secondary text-base px-8 py-3.5"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

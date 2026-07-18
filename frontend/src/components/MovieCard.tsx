@@ -20,11 +20,11 @@ export default function MovieCard({ movie }: MovieCardProps) {
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    router.push(`/movies/${movie.id}`);
+    router.push(`/movie/?id=${movie.id}`);
   };
 
   return (
-    <a href={`/movies/${movie.id}`} onClick={handleClick} className="block group">
+    <a href={`/movie/?id=${movie.id}`} onClick={handleClick} className="block group">
       <article className="card h-full cursor-pointer" id={`movie-card-${movie.id}`}>
         {/* Poster */}
         <div className="relative aspect-[2/3] overflow-hidden">

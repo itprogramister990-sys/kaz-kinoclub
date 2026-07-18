@@ -15,7 +15,7 @@ export async function fetchMovies(query?: string, genres?: string, page?: number
   const queryString = params.toString();
   if (queryString) url += `?${queryString}`;
 
-  const res = await fetch(url, { next: { revalidate: 43200 } });
+  const res = await fetch(url, { next: { revalidate: 43200 }, signal: AbortSignal.timeout(60000) });
 
   if (!res.ok) {
     throw new Error(`Ошибка загрузки фильмов: ${res.status}`);
@@ -26,7 +26,7 @@ export async function fetchMovies(query?: string, genres?: string, page?: number
 
 export async function fetchTopMovies(): Promise<MoviesResponse> {
   const url = `${API_BASE}/api/movies/top`;
-  const res = await fetch(url, { next: { revalidate: 43200 } });
+  const res = await fetch(url, { next: { revalidate: 43200 }, signal: AbortSignal.timeout(60000) });
 
   if (!res.ok) {
     throw new Error(`Ошибка загрузки топ фильмов: ${res.status}`);
@@ -38,6 +38,7 @@ export async function fetchTopMovies(): Promise<MoviesResponse> {
 export async function fetchMovie(id: number | string): Promise<Movie> {
   const res = await fetch(`${API_BASE}/api/movies/${id}`, {
     next: { revalidate: 0 },
+    signal: AbortSignal.timeout(60000),
   });
 
   if (!res.ok) {
@@ -53,6 +54,7 @@ export async function fetchMovie(id: number | string): Promise<Movie> {
 export async function fetchComments(movieId: number | string): Promise<CommentsResponse> {
   const res = await fetch(`${API_BASE}/api/comments/${movieId}`, {
     cache: 'no-store',
+    signal: AbortSignal.timeout(60000),
   });
 
   if (!res.ok) {
@@ -71,6 +73,7 @@ export async function postComment(data: {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
+    signal: AbortSignal.timeout(60000),
   });
 
   if (!res.ok) {

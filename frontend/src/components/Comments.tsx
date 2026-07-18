@@ -1,8 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Comment } from '@/lib/types';
 import { postComment } from '@/lib/api';
+import { supabase } from '@/lib/supabaseClient';
+import type { Session } from '@supabase/supabase-js';
+import Link from 'next/link';
 
 interface CommentsProps {
   movieId: number;
@@ -48,6 +51,27 @@ export default function Comments({ movieId, initialComments }: CommentsProps) {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const [session, setSession] = useState<Session | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      if (session?.user?.user_metadata?.full_name) {
+        setUserName(session.user.user_metadata.full_name);
+      }
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+      if (session?.user?.user_metadata?.full_name) {
+        setUserName(session.user.user_metadata.full_name);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -92,86 +116,93 @@ export default function Comments({ movieId, initialComments }: CommentsProps) {
       </h2>
 
       {/* Comment form */}
-      <div className="glass rounded-2xl p-6 mb-8 animate-slide-up">
-        <h3 className="text-white/80 font-semibold mb-4">Оставить отзыв</h3>
-        <form onSubmit={handleSubmit} id="comment-form" className="space-y-4">
-          <div>
-            <label htmlFor="comment-name" className="block text-white/60 text-sm mb-1.5">
-              Ваше имя
-            </label>
-            <input
-              id="comment-name"
-              type="text"
-              value={userName}
-              onChange={(e) => setUserName(e.target.value)}
-              placeholder="Например: Айгерим"
-              maxLength={100}
-              className="input-field"
-              disabled={submitting}
-            />
-          </div>
-
-          <div>
-            <label htmlFor="comment-text" className="block text-white/60 text-sm mb-1.5">
-              Ваш отзыв
-            </label>
-            <textarea
-              id="comment-text"
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              placeholder="Поделитесь своими впечатлениями о фильме..."
-              rows={4}
-              maxLength={2000}
-              className="input-field resize-none"
-              disabled={submitting}
-            />
-            <p className="text-white/30 text-xs mt-1 text-right">{text.length}/2000</p>
-          </div>
-
-          {/* Status messages */}
-          {error && (
-            <div className="flex items-center gap-2 text-red-400 text-sm bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-3">
-              <svg className="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clipRule="evenodd" />
-              </svg>
-              {error}
+      {session ? (
+        <div className="glass rounded-2xl p-6 mb-8 animate-slide-up">
+          <h3 className="text-white/80 font-semibold mb-4">Оставить отзыв</h3>
+          <form onSubmit={handleSubmit} id="comment-form" className="space-y-4">
+            <div>
+              <label htmlFor="comment-name" className="block text-white/60 text-sm mb-1.5">
+                Ваше имя
+              </label>
+              <input
+                id="comment-name"
+                type="text"
+                value={userName}
+                onChange={(e) => setUserName(e.target.value)}
+                placeholder="Например: Айгерим"
+                maxLength={100}
+                className="input-field"
+                disabled={submitting}
+              />
             </div>
-          )}
 
-          {success && (
-            <div className="flex items-center gap-2 text-green-400 text-sm bg-green-500/10 border border-green-500/20 rounded-lg px-4 py-3">
-              <svg className="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" />
-              </svg>
-              Комментарий успешно добавлен!
+            <div>
+              <label htmlFor="comment-text" className="block text-white/60 text-sm mb-1.5">
+                Ваш отзыв
+              </label>
+              <textarea
+                id="comment-text"
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                placeholder="Поделитесь своими впечатлениями о фильме..."
+                rows={4}
+                maxLength={2000}
+                className="input-field resize-none"
+                disabled={submitting}
+              />
+              <p className="text-white/30 text-xs mt-1 text-right">{text.length}/2000</p>
             </div>
-          )}
 
-          <button
-            type="submit"
-            id="submit-comment-btn"
-            disabled={submitting}
-            className="btn-primary w-full justify-center disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100"
-          >
-            {submitting ? (
-              <>
-                <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+            {/* Status messages */}
+            {error && (
+              <div className="flex items-center gap-2 text-red-400 text-sm bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-3">
+                <svg className="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clipRule="evenodd" />
                 </svg>
-                Отправка...
-              </>
-            ) : (
-              <>
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                </svg>
-                Отправить отзыв
-              </>
+                {error}
+              </div>
             )}
-          </button>
-        </form>
-      </div>
+
+            {success && (
+              <div className="flex items-center gap-2 text-green-400 text-sm bg-green-500/10 border border-green-500/20 rounded-lg px-4 py-3">
+                <svg className="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" />
+                </svg>
+                Комментарий успешно добавлен!
+              </div>
+            )}
+
+            <button
+              type="submit"
+              id="submit-comment-btn"
+              disabled={submitting}
+              className="btn-primary w-full justify-center disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100"
+            >
+              {submitting ? (
+                <>
+                  <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                  Отправка...
+                </>
+              ) : (
+                <>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                  </svg>
+                  Отправить отзыв
+                </>
+              )}
+            </button>
+          </form>
+        </div>
+      ) : (
+        <div className="glass rounded-2xl p-6 mb-8 text-center bg-slate-900/50 border border-slate-800 animate-slide-up">
+          <p className="text-slate-300 mb-4">Чтобы оставить комментарий, пожалуйста, войдите в аккаунт.</p>
+          <Link href="/login" className="btn-primary inline-flex px-8">Войти в аккаунт</Link>
+        </div>
+      )}
 
       {/* Comments list */}
       <div className="space-y-4">

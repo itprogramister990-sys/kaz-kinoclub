@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import Script from 'next/script';
 import './globals.css';
-import { Providers } from '@/components/Providers';
 
 export const metadata: Metadata = {
   title: 'КиноКлуб — Смотреть фильмы, официальные трейлеры и отзывы',
@@ -50,9 +49,7 @@ export default function RootLayout({
             <img src="https://mc.yandex.ru/watch/110730294" style={{ position: 'absolute', left: '-9999px' }} alt="" />
           </div>
         </noscript>
-        <Providers>
-          {children}
-        </Providers>
+        {children}
       </body>
     </html>
   );
