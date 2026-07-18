@@ -15,10 +15,15 @@ export default function Navbar() {
 
   useEffect(() => {
     // Initial check
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setLoadingSession(false);
-    });
+    supabase.auth.getSession()
+      .then(({ data: { session } }) => {
+        setSession(session);
+        setLoadingSession(false);
+      })
+      .catch((err) => {
+        console.error("Auth session error:", err);
+        setLoadingSession(false);
+      });
 
     // Listen for changes
     const {
