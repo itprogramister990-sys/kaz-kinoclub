@@ -1,37 +1,39 @@
-import { Suspense } from 'react';
+"use client";
+
+import { Suspense, useEffect, useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import SearchBar from '@/components/SearchBar';
 import MainMovieGrid from '@/components/MainMovieGrid';
 import { fetchMovies } from '@/lib/api';
 import type { Movie } from '@/lib/types';
-import type { Metadata } from 'next';
+import { useSearchParams } from 'next/navigation';
 
-export const metadata: Metadata = {
-  title: 'Результаты поиска — КиноКлуб Казахстан',
-  description: 'Результаты поиска по фильмам.',
-};
+function SearchResultsContent() {
+  const searchParams = useSearchParams();
+  const query = searchParams.get('q') || '';
+  const years = searchParams.get('years') || '';
+  const genres = searchParams.get('genres') || '';
 
-export const revalidate = 43200;
+  const [movies, setMovies] = useState<Movie[]>([]);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(true);
 
-interface SearchResultsPageProps {
-  searchParams: { q?: string; years?: string; genres?: string };
-}
-
-export default async function SearchResultsPage({ searchParams }: SearchResultsPageProps) {
-  const query = searchParams.q || '';
-  const years = searchParams.years || '';
-  const genres = searchParams.genres || '';
-
-  let movies: Movie[] = [];
-  let error = '';
-
-  try {
-    const data = await fetchMovies(query, genres, 1, years);
-    movies = data.movies;
-  } catch (err: any) {
-    error = 'Ошибка загрузки результатов поиска.';
-  }
+  useEffect(() => {
+    async function load() {
+      setLoading(true);
+      setError('');
+      try {
+        const data = await fetchMovies(query, genres, 1, years);
+        setMovies(data.movies || []);
+      } catch (err: any) {
+        setError('Ошибка загрузки результатов поиска.');
+      } finally {
+        setLoading(false);
+      }
+    }
+    load();
+  }, [query, genres, years]);
 
   return (
     <>
@@ -51,14 +53,14 @@ export default async function SearchResultsPage({ searchParams }: SearchResultsP
                 </p>
               )}
             </div>
-            <Suspense fallback={<div className="h-16 bg-white/5 rounded-2xl animate-pulse w-full max-w-2xl mx-auto"></div>}>
-              <SearchBar />
-            </Suspense>
+            <SearchBar />
           </section>
 
           {/* Movies grid */}
           <section aria-label="Найденные фильмы">
-            {error ? (
+            {loading ? (
+              <div className="text-center py-20 text-white">Загрузка...</div>
+            ) : error ? (
               <div className="text-center py-20">
                 <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
                   <svg className="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -68,12 +70,12 @@ export default async function SearchResultsPage({ searchParams }: SearchResultsP
                 </div>
                 <h2 className="text-xl font-semibold text-white mb-2">Ошибка загрузки</h2>
                 <p className="text-white/50 mb-6">{error}</p>
-                <a 
-                  href="/search-results" 
+                <button 
+                  onClick={() => window.location.reload()} 
                   className="inline-block bg-white/10 hover:bg-white/20 transition-colors px-6 py-2 rounded-lg text-white"
                 >
                   Обновить страницу
-                </a>
+                </button>
               </div>
             ) : movies.length === 0 ? (
               <div className="text-center py-20">
@@ -95,5 +97,13 @@ export default async function SearchResultsPage({ searchParams }: SearchResultsP
 
       <Footer />
     </>
+  );
+}
+
+export default function SearchResultsPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen pt-24 text-center text-white">Загрузка...</div>}>
+      <SearchResultsContent />
+    </Suspense>
   );
 }
