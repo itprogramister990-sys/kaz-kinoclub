@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation';
 import { PasswordInput } from './PasswordInput';
 import { Loader2, MailCheck } from 'lucide-react';
 import Link from 'next/link';
-import { Turnstile } from '@marsidev/react-turnstile';
 
 export function RegisterForm() {
   const [email, setEmail] = useState('');
@@ -15,7 +14,6 @@ export function RegisterForm() {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isEmailSent, setIsEmailSent] = useState(false);
-  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const router = useRouter();
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -32,11 +30,6 @@ export function RegisterForm() {
       return;
     }
 
-    if (!captchaToken) {
-      setError('Пожалуйста, пройдите проверку на робота');
-      return;
-    }
-
     setIsLoading(true);
 
     try {
@@ -44,7 +37,6 @@ export function RegisterForm() {
         email,
         password,
         options: {
-          captchaToken,
           emailRedirectTo: typeof window !== 'undefined' ? `${window.location.origin}/auth/callback` : undefined,
         }
       });
@@ -151,16 +143,6 @@ export function RegisterForm() {
           />
         </div>
 
-        {/* Turnstile Captcha */}
-        <div className="flex justify-center pt-2">
-          <Turnstile 
-            siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ''} 
-            onSuccess={(token) => setCaptchaToken(token)}
-            onError={() => setError('Ошибка проверки на робота. Пожалуйста, обновите страницу.')}
-            options={{ theme: 'dark' }}
-          />
-        </div>
-
         {error && (
           <div className="text-red-400 text-sm text-center animate-in slide-in-from-top-1 bg-red-400/10 py-2 rounded-lg">
             {error}
@@ -169,7 +151,7 @@ export function RegisterForm() {
 
         <button
           type="submit"
-          disabled={isLoading || !captchaToken}
+          disabled={isLoading}
           className="w-full py-3 mt-4 flex justify-center items-center rounded-xl bg-brand-gradient hover:shadow-glow-red text-white font-semibold transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 disabled:cursor-not-allowed"
         >
           {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Зарегистрироваться"}

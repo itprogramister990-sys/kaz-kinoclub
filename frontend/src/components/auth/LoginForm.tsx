@@ -6,34 +6,24 @@ import { useRouter } from 'next/navigation';
 import { PasswordInput } from './PasswordInput';
 import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
-import { Turnstile } from '@marsidev/react-turnstile';
 
 export function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
-    if (!captchaToken) {
-      setError('Пожалуйста, пройдите проверку на робота');
-      return;
-    }
-
     setIsLoading(true);
 
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
-        password,
-        options: {
-          captchaToken,
-        }
+        password
       });
 
       if (error) {
@@ -54,18 +44,12 @@ export function LoginForm() {
   };
 
   const handleGoogleLogin = async () => {
-    if (!captchaToken) {
-      setError('Пожалуйста, пройдите проверку на робота');
-      return;
-    }
-
     setIsLoading(true);
     setError('');
     try {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          captchaToken,
           redirectTo: typeof window !== 'undefined' ? `${window.location.origin}/` : undefined,
         }
       });
@@ -109,16 +93,6 @@ export function LoginForm() {
           />
         </div>
 
-        {/* Turnstile Captcha */}
-        <div className="flex justify-center pt-2 pb-2">
-          <Turnstile 
-            siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ''} 
-            onSuccess={(token) => setCaptchaToken(token)}
-            onError={() => setError('Ошибка проверки на робота. Пожалуйста, обновите страницу.')}
-            options={{ theme: 'dark' }}
-          />
-        </div>
-
         {error && (
           <div className="text-red-400 text-sm text-center animate-in slide-in-from-top-1 bg-red-400/10 py-2 rounded-lg">
             {error}
@@ -127,7 +101,7 @@ export function LoginForm() {
 
         <button
           type="submit"
-          disabled={isLoading || !captchaToken}
+          disabled={isLoading}
           className="w-full py-3 mt-2 flex justify-center items-center rounded-xl bg-brand-gradient hover:shadow-glow-red text-white font-semibold transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 disabled:cursor-not-allowed"
         >
           {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Войти"}
@@ -146,7 +120,7 @@ export function LoginForm() {
       <button
         type="button"
         onClick={handleGoogleLogin}
-        disabled={isLoading || !captchaToken}
+        disabled={isLoading}
         className="w-full flex items-center justify-center space-x-2 py-3 rounded-xl bg-white text-slate-900 hover:bg-slate-100 font-medium transition-all transform hover:scale-[1.02] shadow-md disabled:opacity-50 disabled:hover:scale-100"
       >
         <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -156,7 +130,7 @@ export function LoginForm() {
           <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
         </svg>
         <span>Войти через Google</span>
-    </button>
+      </button>
 
       <p className="text-center text-sm text-slate-400 mt-6">
         Нет аккаунта?{" "}
