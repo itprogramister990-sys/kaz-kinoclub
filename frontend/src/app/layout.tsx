@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Script from 'next/script';
 import './globals.css';
+import BottomNav from '@/components/BottomNav';
 
 export const metadata: Metadata = {
   title: 'КиноКлуб — Смотреть фильмы, официальные трейлеры и отзывы',
@@ -17,6 +18,19 @@ export const metadata: Metadata = {
     google: 'WuCUsJM09tzTtDSvo9x-Lz0jJUH-zlsTd-3qYAE9J7I',
     yandex: 'mo8hlt1fyd84dj9j',
   },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'КиноКлуб',
+  },
+};
+
+export const viewport = {
+  themeColor: '#0f172a',
+  viewportFit: 'cover',
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
 };
 
 export default function RootLayout({
@@ -26,7 +40,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ru">
-      <body className="min-h-screen bg-[#0d0d1a] antialiased">
+      <body className="min-h-screen bg-[#0d0d1a] antialiased pb-16 lg:pb-0">
         <Script id="yandex-metrika" strategy="afterInteractive">
           {`
             (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
@@ -50,6 +64,7 @@ export default function RootLayout({
           </div>
         </noscript>
         {children}
+        <BottomNav />
       </body>
     </html>
   );
