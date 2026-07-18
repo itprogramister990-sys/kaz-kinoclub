@@ -14,7 +14,7 @@ interface MoviePageProps {
 }
 
 export async function generateStaticParams() {
-  return [];
+  return [{ id: '1' }];
 }
 
 export async function generateMetadata({ params }: MoviePageProps): Promise<Metadata> {
