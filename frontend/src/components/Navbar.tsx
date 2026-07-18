@@ -98,12 +98,12 @@ export default function Navbar() {
                         <p className="text-sm font-medium text-white truncate">{session.user?.name || 'Пользователь'}</p>
                         <p className="text-xs text-slate-400 truncate">{session.user?.email}</p>
                       </div>
-                      <button className="text-left px-4 py-2 text-sm text-slate-300 hover:bg-slate-800 hover:text-white transition-colors">
+                      <Link href="/profile" onClick={() => setDropdownOpen(false)} className="text-left px-4 py-2 text-sm text-slate-300 hover:bg-slate-800 hover:text-white transition-colors">
                         Профиль
-                      </button>
-                      <button className="text-left px-4 py-2 text-sm text-slate-300 hover:bg-slate-800 hover:text-white transition-colors">
+                      </Link>
+                      <Link href="/settings" onClick={() => setDropdownOpen(false)} className="text-left px-4 py-2 text-sm text-slate-300 hover:bg-slate-800 hover:text-white transition-colors">
                         Параметры
-                      </button>
+                      </Link>
                       <button
                         onClick={() => signOut()}
                         className="text-left px-4 py-2 text-sm text-red-400 hover:bg-slate-800 hover:text-red-300 transition-colors mt-1 border-t border-slate-800/50 pt-3"
