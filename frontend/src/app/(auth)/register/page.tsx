@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Turnstile } from "@marsidev/react-turnstile";
-import { Loader2 } from "lucide-react";
+import { Loader2, Mail } from "lucide-react";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
@@ -12,6 +12,7 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
 
   const router = useRouter();
@@ -52,15 +53,38 @@ export default function RegisterPage() {
         throw new Error(data.message || "Ошибка при регистрации");
       }
 
-      // Automatically sign in after successful registration or redirect to login
-      router.push("/");
-      // Or you can automatically sign in using next-auth here
+      setIsSuccess(true);
     } catch (err: any) {
       setError(err.message || "Произошла ошибка при регистрации");
     } finally {
       setIsLoading(false);
     }
   };
+
+  if (isSuccess) {
+    return (
+      <div className="min-h-screen pt-24 px-4 flex items-center justify-center bg-[#0d0d1a] relative overflow-hidden">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-purple-600/20 blur-[120px]" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-indigo-600/20 blur-[120px]" />
+        
+        <div className="relative w-full max-w-md p-8 rounded-3xl backdrop-blur-xl bg-slate-950/60 border border-slate-700/50 shadow-[0_0_40px_rgba(0,0,0,0.5)] z-10 animate-in fade-in zoom-in duration-300 flex flex-col items-center text-center">
+          <div className="w-20 h-20 bg-purple-500/20 rounded-full flex items-center justify-center mb-6">
+            <Mail className="w-10 h-10 text-purple-400" />
+          </div>
+          <h1 className="text-3xl font-bold mb-4 text-white">Проверьте почту</h1>
+          <p className="text-slate-400 mb-8">
+            Ссылка для подтверждения отправлена на <span className="text-white font-medium">{email}</span>. Пожалуйста, перейдите по ней для активации аккаунта.
+          </p>
+          <Link 
+            href="/"
+            className="w-full py-3 flex justify-center items-center rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold transition-colors"
+          >
+            На главную
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen pt-24 px-4 flex items-center justify-center bg-[#0d0d1a] relative overflow-hidden">
