@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   description: 'Откройте для себя лучшие фильмы, читайте отзывы и смотрите легально. КиноКлуб Казахстан — ваше кино сообщество.',
 };
 
-export const revalidate = 43200;
+export const dynamic = 'force-dynamic';
 
 export default async function Home() {
   let movies: Movie[] = [];
