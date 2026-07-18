@@ -14,6 +14,11 @@ export default function Navbar() {
   const [loadingSession, setLoadingSession] = useState(true);
 
   useEffect(() => {
+    // Fallback timeout for Smart TVs (forces skeleton to disappear if Supabase hangs)
+    const timeoutId = setTimeout(() => {
+      setLoadingSession(false);
+    }, 2000);
+
     // Initial check
     supabase.auth.getSession()
       .then(({ data: { session } }) => {
@@ -32,7 +37,10 @@ export default function Navbar() {
       setSession(session);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      clearTimeout(timeoutId);
+      subscription.unsubscribe();
+    };
   }, []);
 
   const handleSignOut = async () => {
