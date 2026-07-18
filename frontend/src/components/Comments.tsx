@@ -45,7 +45,6 @@ function getAvatarColor(name: string) {
 
 export default function Comments({ movieId, initialComments }: CommentsProps) {
   const [comments, setComments] = useState<Comment[]>(initialComments);
-  const [comments, setComments] = useState<Comment[]>(initialComments);
   const [text, setText] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
