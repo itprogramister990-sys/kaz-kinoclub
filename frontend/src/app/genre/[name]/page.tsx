@@ -23,16 +23,7 @@ const GENRE_TITLES: Record<string, string> = {
   'cartoon': 'Мультфильмы'
 };
 
-// 1. Возвращаем реальные жанры, чтобы компилятор создал для них файлы
-export async function generateStaticParams() {
-  return Object.keys(slugMap).map((slug) => ({
-    name: slug,
-  }));
-}
-
-// 2. Строго запрещаем попытки динамического рендера
-export const dynamicParams = false;
-export const dynamic = 'force-static';
+export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }: { params: { name: string } }): Promise<Metadata> {
   const genreTitle = GENRE_TITLES[params.name] || 'Фильмы';
