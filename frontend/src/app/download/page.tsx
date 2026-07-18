@@ -1,7 +1,7 @@
 "use client";
 
 import { usePWAInstall } from "@/hooks/usePWAInstall";
-import { Monitor, Smartphone, CheckCircle2, Info } from "lucide-react";
+import { Monitor, Smartphone, CheckCircle2, Info, Tv } from "lucide-react";
 import { useState } from "react";
 
 export default function DownloadPage() {
@@ -107,6 +107,30 @@ export default function DownloadPage() {
             </div>
           </div>
 
+          {/* Smart TV Card */}
+          <div className="p-6 md:p-8 rounded-3xl backdrop-blur-xl bg-slate-900/60 border border-slate-700/50 shadow-[0_0_40px_rgba(0,0,0,0.3)] relative overflow-hidden group hover:border-emerald-500/50 transition-colors">
+            <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
+              <Tv className="w-24 h-24 text-emerald-400" />
+            </div>
+            
+            <div className="relative z-10">
+              <div className="w-12 h-12 bg-emerald-500/20 rounded-2xl flex items-center justify-center mb-6 border border-emerald-500/30">
+                <Tv className="w-6 h-6 text-emerald-400" />
+              </div>
+              <h2 className="text-2xl font-bold text-white mb-2">Smart TV (Android / WebOS)</h2>
+              <p className="text-slate-400 mb-6 text-sm">
+                Оптимизировано для браузеров LG WebOS и Tizen. Для Android TV скачайте установочный файл.
+              </p>
+
+              <button
+                onClick={handleDesktopDownload}
+                className="px-6 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold transition-all flex items-center gap-2 relative overflow-hidden group-hover:border-emerald-500/30"
+              >
+                <Tv className="w-5 h-5" />
+                Скачать для Android TV (.apk)
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 

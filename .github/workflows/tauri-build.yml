@@ -1,0 +1,39 @@
+name: Tauri Build
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-tauri:
+    name: Build Tauri on Windows
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install Frontend Dependencies
+        working-directory: ./frontend
+        run: npm install
+
+      - name: Build Tauri App
+        working-directory: ./frontend
+        env:
+          TAURI_BUILD: "true"
+        run: npx @tauri-apps/cli build
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Kinoklub-Windows-Installer
+          path: frontend/src-tauri/target/release/bundle/msi/*.msi

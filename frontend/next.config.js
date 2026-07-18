@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
+const isTauri = process.env.TAURI_BUILD === 'true';
+
 const nextConfig = {
+  output: isTauri ? 'export' : undefined,
   images: {
     unoptimized: true,
     remotePatterns: [
@@ -14,14 +17,16 @@ const nextConfig = {
       },
     ],
   },
-  async rewrites() {
-    return [
-      {
-        source: '/tmdb-images/:path*',
-        destination: 'https://image.tmdb.org/t/p/:path*',
-      },
-    ];
-  },
+  ...(isTauri ? {} : {
+    async rewrites() {
+      return [
+        {
+          source: '/tmdb-images/:path*',
+          destination: 'https://image.tmdb.org/t/p/:path*',
+        },
+      ];
+    },
+  }),
 };
 
 const withPWA = require('next-pwa')({
